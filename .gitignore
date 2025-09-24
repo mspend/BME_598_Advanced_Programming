@@ -1,7 +1,7 @@
-# === Operating System files ===
+# Ignore macOS metadata
 .DS_Store         # macOS
 
-# === Build output ===
+# Ignore macOS metadata
 __pycache__/
 
 # Ignore these specific files
