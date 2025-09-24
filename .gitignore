@@ -1,0 +1,20 @@
+# === Operating System files ===
+.DS_Store         # macOS
+
+# === Build output ===
+__pycache__/
+
+# Ignore these specific files
+module_1/lunch_DataFrame.csv
+module_1/Spyder screenshot.pdf
+module_1/TheMuppets.csv
+
+module_3/In-Class Activity 3.1.docx
+
+module_4/HW4_LeetCode.docx
+module_4/HW4_LeetCode.pdf
+
+module_5/JetLagLeaderboard.pdf
+
+
+
