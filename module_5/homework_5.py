@@ -6,25 +6,19 @@ import matplotlib.pyplot as plt
 
 # Are there sex-specific effects (gender) on overall survival (OS.time)
 
-panCancer_phenos = pd.read_csv('module_5/phenotypes_panCancer.csv')
+panCancer_phenos = pd.read_csv('phenotypes_panCancer.csv')
 
+# first 5 rows
+print(panCancer_phenos.head())
 
+# names of columns
+print(panCancer_phenos.columns)
 
+# count of non-null data per column
+print(panCancer_phenos.info())
 
+# descriptive statistics
+print(panCancer_phenos.describe())
 
+# key variables for our analysis:  tumor, age_at_initial_pathologic_diagnosis, gender, and OS.time
 
-
-
-
-
-
-
-
-
-penguins = sns.load_dataset("penguins")
-
-sns.scatterplot(x="flipper_length_mm", 
-                y="body_mass_g", 
-                hue="species", 
-                data=penguins)
-plt.show()
