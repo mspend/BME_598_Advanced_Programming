@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 ##### OBJECTIVES #####
 # What is the  impact of age on a set of genes in 
@@ -45,3 +46,21 @@ cancers_of_interest = cancers_of_interest.drop(columns = 'OS')
 # Drop missing values
 cancers_of_interest = cancers_of_interest.dropna()
 
+# Select only cancers of interest
+cancers_of_interest = ["BLCA", "LUAD", "SKCM"]
+subset = panCancer_phenos[panCancer_phenos["tumor"].isin(cancers_of_interest)]
+
+# Prepare data for violinplot
+data = [subset[subset["tumor"] == g]["age_at_initial_pathologic_diagnosis"].dropna()
+        for g in cancers_of_interest]
+
+# Create violin plot
+plt.figure(figsize=(6,5))
+plt.violinplot(data, showmeans=True)
+
+# Label axes
+plt.xticks(np.arange(1,len(cancers_of_interest)+1), cancers_of_interest)
+plt.xlabel("Tumor Type")
+plt.ylabel("Age at Initial Diagnosis (Years)")
+plt.title("Examining Age at Initial Diagnosis")
+plt.show()
