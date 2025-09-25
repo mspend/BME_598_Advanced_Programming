@@ -1,5 +1,4 @@
 # Mauri Spendlove
-# 
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -98,13 +97,26 @@ print(median_survival)
 # Select data
 races = ['WHITE', 'BLACK OR AFRICAN AMERICAN', 'ASIAN', 
          'AMERICAN INDIAN OR ALASKA NATIVE', 'NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER', '[Unknown]']
-subset_3 = panCancer_phenos[panCancer_phenos["race"].isin(races)]
 
+subset_3 = panCancer_phenos[
+    (panCancer_phenos["tumor"] == "LUAD") &
+    (panCancer_phenos["race"].isin(races))
+]
 # Prepare data: group age values by race
 data_3 = [
     subset_3[subset_3["race"] == race]["age_at_initial_pathologic_diagnosis"].dropna()
     for race in races
 ]
+
+data_3 = []
+valid_races = []
+
+for race in races:
+    values = subset_3[subset_3["race"] == race]["age_at_initial_pathologic_diagnosis"].dropna()
+    if not values.empty:
+        data_3.append(values)
+        valid_races.append(race)
+
 
 # Create violin plot of age vs race
 plt.figure(figsize=(6,5))
