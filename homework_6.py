@@ -146,8 +146,6 @@ for index in prolif_plot_long.index:
 
 
 
-# Multipage PDF
-
 from matplotlib.backends.backend_pdf import PdfPages
 
 with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
@@ -187,8 +185,9 @@ with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
 #     f. Convert the dictionary into a pandas DataFrame called 'perturbation_comparisons_df'
 #     g. Write out the DataFrame to a csv file called 'perturbation_comparisons_df.csv'
 
+perturbation_comparisons = pd.DataFrame(columns= ['HA.FC', 'HA.stat', 'HA.pvalue', 'T98G.FC', 'T98G.stat', 'T98G.pvalue', 'U251.FC', 'U251.stat', 'U251.pvalue'])
 
-
+perturbation_comparisons.to_csv('perturbation_comparisons_df.csv')
 
 
 
