@@ -69,7 +69,7 @@ print(prolif.shape)
 #        line. Make a new pandas DataFrame with corrected cell counts called 'prolif_corrected'
 
 # The background is represented by the No_cell rows in the DataFrame
-median_no_cell = {}
+median_no_cells = {}
 
 # Pull out the 3 rows that correspond to No_cell plate
 for index in prolif.index:
@@ -88,9 +88,9 @@ for index in prolif.index:
                 median = np.median(cell_numbers)
                 temp_dict[cellline] = median
             # print(temp_dict)
-        median_no_cell[index] = temp_dict
+        median_no_cells[index] = temp_dict
             # print(cell_numbers)
-print(median_no_cell)    
+print(median_no_cells)    
 
 
 
