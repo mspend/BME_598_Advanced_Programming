@@ -126,6 +126,21 @@ for index in prolif_corrected.index:
 #     d. Save as all plots into one PDF called 'perturbation_by_cell_line.pdf'
 
 
+# Reset index so perturbation becomes a column
+prolif_plot_long = prolif_corrected.reset_index().rename(columns={'index': 'perturbation'})
+
+
+replicates = ['HA.1', 'HA.2', 'HA.3', 'HA.4', 'T98G.1', 'T98G.2', 'T98G.3','T98G.4', 'U251.1', 'U251.2', 'U251.3', 'U251.4']
+
+# Melt the replicate columns into long format
+prolif_plot_long = pd.melt(prolif_plot_long, id_vars='perturbation', value_vars = replicates, var_name = 'variable', value_name='value')
+
+for index in prolif_plot_long.index:
+    # row = prolif_plot_long.loc[index]
+    old_name = prolif_plot_long.loc[index]['variable']
+    new_name = old_name[0:-2]
+    prolif_plot_long.at[index, 'variable'] = new_name
+
 
 
 
