@@ -36,8 +36,6 @@ import seaborn as sns
 import scipy.stats as stats
 
 
-
-
 ## 2. (10pts) Load up and inspect data and function
 #  Deliverables:
 #     a. Use a text editor to determine the structure of the 'proliferation_v3_w_redos_clean.csv' file
@@ -48,10 +46,8 @@ import scipy.stats as stats
 #     d. Make sure the shape of the file is correct
 #        - Expectation is (42 rows, by 14 columns)
 
-
-
-
-
+prolif = pd.read_csv('module_6/proliferation_v3_w_redos_clean.csv', delimiter=',', header=0, index_col=0)
+print(prolif.shape) 
 
 ## 3. (15pts) Background subtraction:
 #  Deliverables:
