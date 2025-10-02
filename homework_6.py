@@ -187,7 +187,7 @@ with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
 
 perturbation_comparisons_df = pd.DataFrame(columns= ['HA.FC', 'HA.stat', 'HA.pvalue', 'T98G.FC', 'T98G.stat', 'T98G.pvalue', 'U251.FC', 'U251.stat', 'U251.pvalue'])
 
-perturbation_comparisons.to_csv('perturbation_comparisons_df.csv')
+perturbation_comparisons_df.to_csv('perturbation_comparisons_df.csv')
 
 
 
