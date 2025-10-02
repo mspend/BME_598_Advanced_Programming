@@ -70,6 +70,7 @@ print(prolif.shape)
 
 # The background is represented by the No_cell rows in the DataFrame
 median_no_cells = {}
+celllines = ['HA', 'T98G', 'U251']
 
 # Pull out the 3 rows that correspond to No_cell plate
 for index in prolif.index:
@@ -78,7 +79,7 @@ for index in prolif.index:
         plate = prolif.loc[index]
         temp_dict = {}
         # Iterate through the 3 cell lines and the 4 replicates in each cell line
-        for cellline in ['HA', 'T98G', 'U251']:
+        for cellline in celllines:
             replicates = [cellline+'.'+str(i) for i in range(1,5)]
             # Make a list with the fluorescent cell numbers for each cell line for each no cell plate
             cell_numbers = []
@@ -90,10 +91,25 @@ for index in prolif.index:
             # print(temp_dict)
         median_no_cells[index] = temp_dict
             # print(cell_numbers)
-print(median_no_cells)    
+print(median_no_cells) 
 
+# Make a copy of the prolif dataframe on which we will perform background subtraction.
+prolif_corrected = prolif.copy()
 
+# Iterate through every line in the dataframe
+for index in prolif_corrected.index:
+    # We want to calculate background subtraction on everything except for the no cell controls
+    if not index.startswith("No_Cell"):
+        # Turns each line into a series
+        row = prolif_corrected.loc[index]
 
+        for cellline in celllines:
+            for row_index in row.index:
+                if row_index.startswith(cellline):
+                    value = row[row_index]
+                    corrected_value = value - median_no_cells[row['No_cell']][cellline]
+                    # replace values the dataframe with corrected values
+                    prolif_corrected[row_index][index] = corrected_value
 
 
 ## 4. (15pts) Plot proliferation per treatment and cell line
