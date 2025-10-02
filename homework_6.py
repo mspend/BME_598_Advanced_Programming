@@ -146,32 +146,22 @@ for index in prolif_plot_long.index:
 
 
 
+# Multipage PDF
 
-# # Multipage PDF
+from matplotlib.backends.backend_pdf import PdfPages
 
-# from matplotlib.backends.backend_pdf import PdfPages
+with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
+    for cellline in celllines:
+        # Filter for current cell line
+        subset = prolif_plot_long[prolif_plot_long['variable'] == cellline]
 
-# # Create a PdfPages object
-# with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
-    
-#     # First plot
-#     plt.figure()
-#     plt.plot([1, 2, 3], [4, 5, 6])
-#     plt.title('Plot One')
-#     pdf.attach_note('Plot One')
-#     pdf.savefig() # Save the current figure to a new page
-#     plt.close() # Close the figure to free up memory
-    
-#     # Second plot
-#     plt.figure()
-#     plt.bar(['A', 'B', 'C'], [10, 20, 15])
-#     plt.title('Plot Two')
-#     pdf.savefig() # Save the current figure to a new page
-#     plt.close() # Close the figure
-
-#     # Third plot
-
-
+        plt.figure(figsize=(12, 6))
+        sns.violinplot(x='perturbation', y='value', data=subset, inner='box')
+        plt.title(f'Violin Plot for {cellline}')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        pdf.savefig()
+        plt.close()
 
 
 ## 5. (20pts) Compare each treatment versus its corresponding control per cell line and per perturbation
