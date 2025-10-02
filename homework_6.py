@@ -129,6 +129,8 @@ for index in prolif_corrected.index:
 # Reset index so perturbation becomes a column
 prolif_plot_long = prolif_corrected.reset_index().rename(columns={'index': 'perturbation'})
 
+# remove the no cell controls as we don't want them in our plot
+prolif_plot_long = prolif_plot_long[~prolif_plot_long['perturbation'].str.startswith('No_Cell')]
 
 replicates = ['HA.1', 'HA.2', 'HA.3', 'HA.4', 'T98G.1', 'T98G.2', 'T98G.3','T98G.4', 'U251.1', 'U251.2', 'U251.3', 'U251.4']
 
@@ -136,11 +138,38 @@ replicates = ['HA.1', 'HA.2', 'HA.3', 'HA.4', 'T98G.1', 'T98G.2', 'T98G.3','T98G
 prolif_plot_long = pd.melt(prolif_plot_long, id_vars='perturbation', value_vars = replicates, var_name = 'variable', value_name='value')
 
 for index in prolif_plot_long.index:
-    # row = prolif_plot_long.loc[index]
-    old_name = prolif_plot_long.loc[index]['variable']
-    new_name = old_name[0:-2]
-    prolif_plot_long.at[index, 'variable'] = new_name
+    row = prolif_plot_long.loc[index]
+    if not row['perturbation'].startswith("No_Cell"):
+        old_name = prolif_plot_long.loc[index]['variable']
+        new_name = old_name[0:-2]
+        prolif_plot_long.at[index, 'variable'] = new_name
 
+
+
+
+# # Multipage PDF
+
+# from matplotlib.backends.backend_pdf import PdfPages
+
+# # Create a PdfPages object
+# with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
+    
+#     # First plot
+#     plt.figure()
+#     plt.plot([1, 2, 3], [4, 5, 6])
+#     plt.title('Plot One')
+#     pdf.attach_note('Plot One')
+#     pdf.savefig() # Save the current figure to a new page
+#     plt.close() # Close the figure to free up memory
+    
+#     # Second plot
+#     plt.figure()
+#     plt.bar(['A', 'B', 'C'], [10, 20, 15])
+#     plt.title('Plot Two')
+#     pdf.savefig() # Save the current figure to a new page
+#     plt.close() # Close the figure
+
+#     # Third plot
 
 
 
