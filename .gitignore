@@ -4,6 +4,10 @@
 # Ignore macOS metadata
 __pycache__/
 
+# Ignore writeup files and plots generated as pdfs
+*.docx
+*.pdf
+
 # Ignore these specific files
 module_1/lunch_DataFrame.csv
 module_1/Spyder screenshot.pdf
