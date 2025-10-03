@@ -36,8 +36,6 @@ import seaborn as sns
 import scipy.stats as stats
 
 
-
-
 ## 2. (10pts) Load up and inspect data and function
 #  Deliverables:
 #     a. Use a text editor to determine the structure of the 'proliferation_v3_w_redos_clean.csv' file
@@ -48,10 +46,8 @@ import scipy.stats as stats
 #     d. Make sure the shape of the file is correct
 #        - Expectation is (42 rows, by 14 columns)
 
-
-
-
-
+prolif = pd.read_csv('proliferation_v3_w_redos_clean.csv', delimiter=',', header=0, index_col=0)
+print(prolif.shape) 
 
 ## 3. (15pts) Background subtraction:
 #  Deliverables:
@@ -72,9 +68,48 @@ import scipy.stats as stats
 #     b. Then, subtract the median 'No cell' background value from each perturbation from the same cell
 #        line. Make a new pandas DataFrame with corrected cell counts called 'prolif_corrected'
 
+# The background is represented by the No_cell rows in the DataFrame
+median_no_cells = {}
+celllines = ['HA', 'T98G', 'U251']
 
+# Pull out the 3 rows that correspond to No_cell plate
+for index in prolif.index:
+    if index.startswith("No_Cell"):
+        # Pull out the row associated with that no cell plate
+        plate = prolif.loc[index]
+        temp_dict = {}
+        # Iterate through the 3 cell lines and the 4 replicates in each cell line
+        for cellline in celllines:
+            replicates = [cellline+'.'+str(i) for i in range(1,5)]
+            # Make a list with the fluorescent cell numbers for each cell line for each no cell plate
+            cell_numbers = []
+            for replicate in replicates:
+                cell_numbers.append(plate[replicate])
+                # print(plate[replicate])
+                median = np.median(cell_numbers)
+                temp_dict[cellline] = median
+            # print(temp_dict)
+        median_no_cells[index] = temp_dict
+            # print(cell_numbers)
+print(median_no_cells) 
 
+# Make a copy of the prolif dataframe on which we will perform background subtraction.
+prolif_corrected = prolif.copy()
 
+# Iterate through every line in the dataframe
+for index in prolif_corrected.index:
+    # We want to calculate background subtraction on everything except for the no cell controls
+    if not index.startswith("No_Cell"):
+        # Turns each line into a series
+        row = prolif_corrected.loc[index]
+
+        for cellline in celllines:
+            for row_index in row.index:
+                if row_index.startswith(cellline):
+                    value = row[row_index]
+                    corrected_value = value - median_no_cells[row['No_cell']][cellline]
+                    # replace values the dataframe with corrected values
+                    prolif_corrected[row_index][index] = corrected_value
 
 
 ## 4. (15pts) Plot proliferation per treatment and cell line
@@ -91,8 +126,40 @@ import scipy.stats as stats
 #     d. Save as all plots into one PDF called 'perturbation_by_cell_line.pdf'
 
 
+# Reset index so perturbation becomes a column
+prolif_plot_long = prolif_corrected.reset_index().rename(columns={'index': 'perturbation'})
+
+# remove the no cell controls as we don't want them in our plot
+prolif_plot_long = prolif_plot_long[~prolif_plot_long['perturbation'].str.startswith('No_Cell')]
+
+replicates = ['HA.1', 'HA.2', 'HA.3', 'HA.4', 'T98G.1', 'T98G.2', 'T98G.3','T98G.4', 'U251.1', 'U251.2', 'U251.3', 'U251.4']
+
+# Melt the replicate columns into long format
+prolif_plot_long = pd.melt(prolif_plot_long, id_vars='perturbation', value_vars = replicates, var_name = 'variable', value_name='value')
+
+for index in prolif_plot_long.index:
+    row = prolif_plot_long.loc[index]
+    if not row['perturbation'].startswith("No_Cell"):
+        old_name = prolif_plot_long.loc[index]['variable']
+        new_name = old_name[0:-2]
+        prolif_plot_long.at[index, 'variable'] = new_name
 
 
+
+from matplotlib.backends.backend_pdf import PdfPages
+
+with PdfPages('violinPlots_byCellLine_byPerturbation.pdf') as pdf:
+    for cellline in celllines:
+        # Filter for current cell line
+        subset = prolif_plot_long[prolif_plot_long['variable'] == cellline]
+
+        plt.figure(figsize=(12, 6))
+        sns.violinplot(x='perturbation', y='value', data=subset, inner='box')
+        plt.title(f'Violin Plot for {cellline}')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        pdf.savefig()
+        plt.close()
 
 
 ## 5. (20pts) Compare each treatment versus its corresponding control per cell line and per perturbation
@@ -118,8 +185,9 @@ import scipy.stats as stats
 #     f. Convert the dictionary into a pandas DataFrame called 'perturbation_comparisons_df'
 #     g. Write out the DataFrame to a csv file called 'perturbation_comparisons_df.csv'
 
+perturbation_comparisons_df = pd.DataFrame(columns= ['HA.FC', 'HA.stat', 'HA.pvalue', 'T98G.FC', 'T98G.stat', 'T98G.pvalue', 'U251.FC', 'U251.stat', 'U251.pvalue'])
 
-
+perturbation_comparisons_df.to_csv('perturbation_comparisons_df.csv')
 
 
 
