@@ -1,5 +1,5 @@
 # Ignore macOS metadata
-.DS_Store         # macOS
+.DS_Store
 
 # Ignore macOS metadata
 __pycache__/
