@@ -35,7 +35,7 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import scipy.stats as stats
+from scipy.stats import pearsonr, spearmanr
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
@@ -50,7 +50,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 #        - Expectation is (462 rows, by 10 columns)
 
 # the data is tab-delimited and has a header but no index
-saheart = pd.read_table('saheart_1 withheader.tab', header=0)
+saheart = pd.read_table('module_7/saheart_1_withheader.tab', header=0)
 
 
 ## 4. (10pts) Make a pairs plot of your data to identify which variables to test in correlation studies.
@@ -78,7 +78,17 @@ with PdfPages('saheart_data_pairplot.pdf') as pdf:
 #        - NOTE: set the comparison of a variable to itself as 0
 
 quant_variables = ['sbp', 'tobacco', 'ldl', 'adiposity', 'typea', 'obesity', 'alcohol', 'age']
+pearson_cor = {}
+pearson_pv = {}
 
+for q1 in quant_variables:
+    pearson_cor[q1] = {}
+    pearson_pv[q1] = {}
+    for q2 in quant_variables:
+        if not q1==q2:
+            pearson_cor[q1][q2], pearson_pv[q1][q2] = pearsonr(saheart[q1], saheart[q2])
+        else:
+            pearson_cor[q1][q2], pearson_pv[q1][q2] = (1, np.nan)
 
 ## 6. (10pts) Convert result dictionaries into pd.DataFrames and write them out as CSV files
 #  Deliverables:
@@ -89,8 +99,14 @@ quant_variables = ['sbp', 'tobacco', 'ldl', 'adiposity', 'typea', 'obesity', 'al
 #        and p-value '.pv'
 #     c. Then write out the merged pd.DataFrame as 'saheart_pearson_correlation.csv'
 
+# Convert to pandas DataFrames
+pearson_cor_df = pd.DataFrame(pearson_cor)
+pearson_pv_df = pd.DataFrame(pearson_pv)
 
-
+# Write out combined R and PV matrix
+combined_df = pd.concat([pearson_cor_df, pearson_pv_df], axis=1).sort_index(axis=1)
+combined_df.columns = [combined_df.columns[i]+'.pv' if ((i+1)%2)==0 else combined_df.columns[i]+'.R' for i in range(len(combined_df.columns))]
+combined_df.to_csv('saheart_pearson_cor_df_heatmap.pdf')
 
 ## 7. (10pts) Visiualize the correlation matrix as a heatmap
 #  Deliverables:
@@ -101,6 +117,13 @@ quant_variables = ['sbp', 'tobacco', 'ldl', 'adiposity', 'typea', 'obesity', 'al
 #     c. Maximum and minimum correlation values should be set at 1 and -1, respectively
 #     d. Must include units for the colorbar legend
 
+# Make a plot of the relationships
+with PdfPages('saheart_pearson_cor_df_heatmap.pdf') as pdf:
+    plt.figure(figsize=(6, 6))
+    sns.heatmap(data=pearson_cor_df, cmap=sns.color_palette("vlag", as_cmap=True), vmin=-1, vmax=1, cbar_kws={'label': 'Pearson\'s R'})
+    plt.tight_layout()
+    pdf.savefig()
+    plt.close()
 
 
 
