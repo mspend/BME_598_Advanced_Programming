@@ -87,7 +87,7 @@ for q1 in quant_variables:
         if not q1==q2:
             pearson_cor[q1][q2], pearson_pv[q1][q2] = pearsonr(saheart[q1], saheart[q2])
         else:
-            pearson_cor[q1][q2], pearson_pv[q1][q2] = (1, np.nan)
+            pearson_cor[q1][q2], pearson_pv[q1][q2] = (0, np.nan)
 
 ## 6. (10pts) Convert result dictionaries into pd.DataFrames and write them out as CSV files
 #  Deliverables:
