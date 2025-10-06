@@ -103,10 +103,19 @@ for q1 in quant_variables:
 pearson_cor_df = pd.DataFrame(pearson_cor)
 pearson_pv_df = pd.DataFrame(pearson_pv)
 
+# Confirm the conversion to DataFrame worked
+print(type(pearson_cor_df))
+
 # Write out combined R and PV matrix
+# axis = 1 means concatenate along the columns (axis=0 is for index)
 combined_df = pd.concat([pearson_cor_df, pearson_pv_df], axis=1).sort_index(axis=1)
+
+# add labels to column headers to make the combined_df easier to read
+# Otherwise there would be 2 columns with the same name for each variable
+# .pv for P-value if the column numbers (indexed from 1) are even, .R for Pearson R
+# When the dfs were concatenated, the df listed first (pearson_cor_df) was on the left, before sorting.
 combined_df.columns = [combined_df.columns[i]+'.pv' if ((i+1)%2)==0 else combined_df.columns[i]+'.R' for i in range(len(combined_df.columns))]
-combined_df.to_csv('saheart_pearson_cor_df_heatmap.pdf')
+combined_df.to_csv('saheart_pearson_correlation.csv')
 
 ## 7. (10pts) Visiualize the correlation matrix as a heatmap
 #  Deliverables:
