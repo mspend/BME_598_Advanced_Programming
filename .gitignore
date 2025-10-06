@@ -6,7 +6,7 @@ __pycache__/
 
 # Ignore writeup files and plots generated as pdfs
 *.docx
-*.pdf
+# *.pdf
 
 # Ignore these specific files
 module_1/lunch_DataFrame.csv
