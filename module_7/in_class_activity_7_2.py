@@ -50,8 +50,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 #        - Expectation is (462 rows, by 10 columns)
 
 # the data is tab-delimited and has a header but no index
-saheart = pd.read_table('saheart_1_withheader.tab', header=0)
-
+saheart = pd.read_table("saheart_1 withheader.tab", header=0)
 
 ## 4. (10pts) Make a pairs plot of your data to identify which variables to test in correlation studies.
 #  Deliverables:
