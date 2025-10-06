@@ -128,7 +128,7 @@ combined_df.to_csv('saheart_pearson_correlation.csv')
 # Make a plot of the relationships
 with PdfPages('saheart_pearson_cor_df_heatmap.pdf') as pdf:
     plt.figure(figsize=(6, 6))
-    sns.heatmap(data=pearson_cor_df, cmap=sns.color_palette("vlag", as_cmap=True), vmin=-1, vmax=1, cbar_kws={'label': 'Pearson\'s R'})
+    hm1 = sns.heatmap(data=pearson_cor_df, cmap=sns.color_palette("vlag", as_cmap=True), vmin=-1, vmax=1, cbar_kws={'label': 'Pearson\'s R'})
     plt.tight_layout()
     pdf.savefig()
     plt.close()
