@@ -31,7 +31,7 @@ import seaborn as sns
 
 ## Load up data
 # Original Data from: https://archive.ics.uci.edu/ml/datasets/Heart+Disease Changes
-clev = pd.read_table() # <<-- Add any necessary code to load up data correctly
+clev = pd.read_table("proc_heart_cleve_3_withheader.tab", sep='\t') # <<-- Add any necessary code to load up data correctly
 print('clev.shpae = '+str(clev.shape))
 
 
