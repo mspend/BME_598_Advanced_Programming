@@ -31,19 +31,21 @@ import seaborn as sns
 
 ## Load up data
 # Original Data from: https://archive.ics.uci.edu/ml/datasets/Heart+Disease Changes
-clev = pd.read_table("proc_heart_cleve_3_withheader.tab", sep='\t') # <<-- Add any necessary code to load up data correctly
-print('clev.shpae = '+str(clev.shape))
+# header but no index
+# default is to add an index
+clev = pd.read_table("proc_heart_cleve_3_withheader.tab", delimiter='\t',header=0) # <<-- Add any necessary code to load up data correctly
+print('clev.shape = '+str(clev.shape))
 
 
 ## Compute ttest p-value for ST_dep_by_exerc vs. Disease
-qualitative_trait = 'REPLACE_ME1' # <<-- Replace with qualitative trait name
-quantitative_trait = 'REPLACE_ME2' # <<-- Repalce with quantitative trait name
+# Disease = -1 means they don't have the disease (control) = b
+# Disease = 1 means they have the disease (case) = a
+qualitative_trait = 'Disease' # <<-- Replace with qualitative trait name
+quantitative_trait = 'ST_dep_by_exerc' # <<-- Repalce with quantitative trait name
 print(ttest_ind(clev.loc[clev[qualitative_trait]==1,quantitative_trait], clev.loc[clev[qualitative_trait]==-1,quantitative_trait]))
 
 
 ## Compute Pearson correalation between maximum heart rate and ST_dep_by_exerc
-quavtitative_trait_1 = 'REPLACE_ME1' # <<-- Replace with qualitative trait name
-quantitative_trait_2 = 'REPLACE_ME2' # <<-- Repalce with quantitative trait name
-print(pearsonr(clev[quantitative_trait_1], clev[quantitative_trait_2])
-
-
+qualitative_trait_1 = 'Max_heart_rate' # <<-- Replace with qualitative trait name
+quantitative_trait_2 = 'ST_dep_by_exerc' # <<-- Repalce with quantitative trait name
+print(pearsonr(clev[qualitative_trait_1], clev[quantitative_trait_2]))
