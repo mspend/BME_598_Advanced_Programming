@@ -19,11 +19,8 @@
 
 ## Total points = 100 pts (70 pts through autograder, 30 pts through PDF submitted through Canvas)
 
-
 ## Your name
 # Mauri Spendlove
-
-
 
 ## 1. (10pts) Prepare an executive summary that clearly states the goals of the proposed analysis and provides a concise overview of the analytical steps to be undertaken�
 #             A. The executive summary needs to be written in plain text; not as bullet points. And should be no more than one paragraph.
@@ -77,7 +74,7 @@ with PdfPages('stroke_data_pairplot.pdf') as pdf:
 
 # Notice that the data has NA values. This will give an error when we run correlations later.
 print(stroke.info())
-stroke = stroke.dropna()
+stroke_filtered = stroke.dropna()
 
 vars_as_string = "Age,SBP,DBP,HbA1c,FBS,TC,LDL,HDL,TG,WBC,CRP,AIP,TyG"
 
@@ -90,7 +87,7 @@ for q1 in quant_variables:
     pearson_pv[q1] = {}
     for q2 in quant_variables:
         if not q1==q2:
-            pearson_cor[q1][q2], pearson_pv[q1][q2] = pearsonr(stroke[q1], stroke[q2])
+            pearson_cor[q1][q2], pearson_pv[q1][q2] = pearsonr(stroke_filtered[q1], stroke_filtered[q2])
         else:
             pearson_cor[q1][q2], pearson_pv[q1][q2] = (0, np.nan)
 
