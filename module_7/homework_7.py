@@ -57,7 +57,6 @@ print(stroke.shape)
 with PdfPages('stroke_data_pairplot.pdf') as pdf:
     plt.figure(figsize=(6, 6))
     sns.pairplot(data=stroke)
-    plt.title('Title')
     plt.tight_layout()
     pdf.savefig()
     plt.close()
