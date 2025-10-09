@@ -60,7 +60,7 @@ probes = probes.to_dict()['Gene Symbol']
 print(probes)
 
 
-## Change expression data to long form
+## Change expression data to long form for seaborn plots
 expr2 = expr
 expr2.columns = [convert_GSMs[i] for i in expr2.columns]
 expr2 = expr2.reset_index()
@@ -69,6 +69,7 @@ print(expr_melt.head())
 
 
 ## Plot violin plots for each probe
+# only plot probes in our expression index
 with PdfPages('effect_of_siRNA_on_expression.pdf') as pdf:
     for probe1 in probes:
         if probe1 in expr.index:
@@ -77,7 +78,7 @@ with PdfPages('effect_of_siRNA_on_expression.pdf') as pdf:
             fig, ax = plt.subplots(1,1)
             sns.boxplot(x='variable', y='value', hue='variable', data=expr_melt.loc[expr_melt['ID_REF']==probe1], ax = ax)
             plt.axhline(y=expr_melt.loc[(expr_melt['ID_REF']==probe1) & (expr_melt['variable']=='Control siRNA')]['value'].median(), color='red', linestyle='--', linewidth=2)
-            sns.move_legend(obj=ax, loc="lower center", bbox_to_anchor=(.5, 1.1), ncol=2, title=None, frameon=False)
+            # sns.move_legend(obj=ax, loc="lower center", bbox_to_anchor=(.5, 1.1), ncol=2, title=None, frameon=False)
             ax.set_title(probes[probe1])
             plt.xticks(rotation=30)
             plt.tight_layout()
