@@ -93,8 +93,7 @@ mg = mygene.MyGeneInfo()
 ensembl_ids = expression_matrix.index.tolist() # all Ensembl IDs in dataset
 ensembl_ids_no_version = [x.split('.')[0] for x in ensembl_ids] # strip version
 annot = mg.querymany(ensembl_ids_no_version, scopes='ensembl.gene', fields='symbol', species='human', as_dataframe=True)
-annot = pd.DataFrame(annot)
-annot = annot.rename(columns={'symbol': 'Accession'})
+annot.index.name = 'Accession'
 
 ## Small clean up for expression_matrix
 # First convert to integers
@@ -174,27 +173,13 @@ for i in range(len(group_labels)):
     print(res_df.head())
     print(res_df.columns) 
     
-    
-    
-
-    #error with line 192 below (previously line 178)
-    # Accession isn't in annot. Accession['query'] doesn't seem to work because I think query is the index. But annot. index doesn't work either
-    
-    
-    
-    
-    
-    
-    
-    
     # Merge with the annotation table made previously
     res_df = res_df.merge(
-        annot[['Accession', 'symbol']],
+        annot[['symbol']],
         how='left',
         left_on='Ensembl_ID_no_version',
-        right_on='Accession'
+        right_index=True
     )
-    res_df = res_df.drop(columns=['Accession_y']) # redundant
     res_df = res_df.drop(columns=['Ensembl_ID_no_version']) # don't need any more
     res_df = res_df.rename(columns={'Accession_x': 'Accession'}) # rename for clarity
     print("\nPreviewing differential expression results with gene symbols:")
