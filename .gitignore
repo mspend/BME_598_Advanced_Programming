@@ -24,6 +24,13 @@ module_5/JetLagLeaderboard.pdf
 module_7/saheart_pearson_correlation.xlsx
 module_7/stroke_pearson_correlation.csv
 
+# these data files are optional bc the geoparse package can load them in
+module_8/GSE75003_family.soft.gz
+module_9/GSE17300_family.soft.gz
 
-
-
+# output files I don't need to push to git
+module_9/GSE17300_DiffExpr_USF1overexp_vs_control.csv
+module_9/GSE17300_expression_matrix.csv
+module_9/GSE17300_sample_metadata.csv
+module_9/GSE179882_expression_matrix.csv
+module_9/GSE179882_sample_metadata.csv
