@@ -33,6 +33,7 @@ import statsmodels.formula.api as smf
 ## Load up data
 extant_animals = pd.read_csv('animal_species.csv', header=0, index_col=3, encoding='latin-1')
 
+# the data is skewed so we log transform the data
 
 ## PdfPages
 with PdfPages('scatterPlots_circ_vs_body_mass.pdf') as savedPDF:
