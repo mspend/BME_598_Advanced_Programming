@@ -21,14 +21,23 @@ fev = pd.read_table(filepath_or_buffer='fev_dat.txt', delimiter='\t')
 
 fev_continuous_vars = fev.drop(columns=['sex','smoke'])
 
-with PdfPages('scatterPlots_fev_data.pdf') as savedPDF:
+with PdfPages('fev_pairplots.pdf') as savedPDF:
     # Pairplot
     sns.pairplot(fev_continuous_vars)
     savedPDF.savefig()
     plt.close()
 
 
+## Linear regression
 
+# Build the model
+model1 = smf.ols('FEV ~ ', data = fev)
+
+# Fit the model
+results1 = model1.fit()
+
+# Collect results
+print(results1.summary())
 
 
 
@@ -40,4 +49,4 @@ with PdfPages('scatterPlots_fev_data.pdf') as savedPDF:
 
 # look for an interaction between age and smoking
 # Question 7
-smf.ols('FEV~age*smoke',data=fev)
+# smf.ols('FEV~age*smoke',data=fev)
