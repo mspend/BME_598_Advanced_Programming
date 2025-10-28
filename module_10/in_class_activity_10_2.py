@@ -17,3 +17,4 @@ import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 
+fev = pd.read_table(filepath_or_buffer='fev_dat.txt', delimiter='\t')
