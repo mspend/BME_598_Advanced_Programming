@@ -18,6 +18,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 
 fev = pd.read_table(filepath_or_buffer='fev_dat.txt', delimiter='\t')
+print(fev.size)
 
 fev_continuous_vars = fev.drop(columns=['sex','smoke'])
 
@@ -30,14 +31,14 @@ with PdfPages('fev_pairplots.pdf') as savedPDF:
 
 ## Linear regression
 
-# Build the model
-model1 = smf.ols('FEV ~ ', data = fev)
+# # Build the model
+# model1 = smf.ols('FEV ~ ', data = fev)
 
-# Fit the model
-results1 = model1.fit()
+# # Fit the model
+# results1 = model1.fit()
 
-# Collect results
-print(results1.summary())
+# # Collect results
+# print(results1.summary())
 
 
 
