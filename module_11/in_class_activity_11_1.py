@@ -34,7 +34,7 @@ import seaborn as sns
 from sklearn.datasets import make_blobs
 
 # Simulate some data
-X, y_true = make_blobs(n_samples=300, centers=4, cluster_std=0.6, random_state=0)
+X, y_true = make_blobs(n_samples=300, centers=4, cluster_std=0.8, random_state=0)
 
 # Plot the data
 with PdfPages('how_many_clusters.pdf') as pdf:
