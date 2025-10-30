@@ -137,7 +137,7 @@ with PdfPages('KMeans_elbow_plot.pdf') as pdf:
 ## Step 5. Comparing methods ##
 ###############################
 
-from sklearn.metrics import adjusted_mutual_info_score
+from sklearn.metrics import adjusted_mutual_info_score # called AMI
 
 print(adjusted_mutual_info_score(y_true, fcluster(Z, t=4, criterion='maxclust')))
 print(adjusted_mutual_info_score(y_true, kmeans.labels_))
