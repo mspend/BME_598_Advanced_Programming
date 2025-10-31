@@ -29,23 +29,61 @@ with PdfPages('fev_pairplots.pdf') as savedPDF:
     plt.close()
 
 
-## Linear regression
+#### Linear regression ####
 
-# # Build the model
-# model1 = smf.ols('FEV ~ ', data = fev)
+### Model 1: Does smoking affect FEV? ###
 
-# # Fit the model
-# results1 = model1.fit()
+# Build the model
+model1 = smf.ols('FEV ~ smoke', data = fev)
 
-# # Collect results
-# print(results1.summary())
+# Fit the model
+results1 = model1.fit()
+
+# Print results
+print(results1.summary())
+
+### Model 2: Effect of smoking and age on FEV ###
+
+# Build the model
+model2 = smf.ols('FEV ~ smoke + age', data = fev)
+
+# Fit the model
+results2 = model2.fit()
+
+# Print results
+print(results2.summary())
 
 
+### Model 3: Effect of smoking, age, and height on FEV with age modeled as quadratic (age^2) ###
+
+# Build the model
+# Use Patsy's I() to include the squared term directly. This specifies smoke and age^2.
+model3 = smf.ols('FEV ~ smoke + I(age ** 2) + ht', data = fev)
+
+# Alternative: include both linear and quadratic age terms if you want both effects
+# model3_alt = smf.ols('FEV ~ smoke + age + I(age ** 2)', data = fev)
+
+# Fit the model
+results3 = model3.fit()
+
+# Print results
+print(results3.summary())
 
 
+### Model 4: Effect of smoking, age, and their interaction on FEV ###
 
+# Build the model
+# Use Patsy's I() to include the squared term directly. This specifies smoke and age^2.
+model4 = smf.ols('FEV ~ age*smoke', data = fev)
 
+# Alternative: include both linear and quadratic age terms if you want both effects
+# model3_alt = smf.ols('FEV ~ smoke + age + I(age ** 2)', data = fev)
 
+# Fit the model
+results4 = model4.fit()
+
+# Print results
+print(results4.summary())
 
 
 # look for an interaction between age and smoking
