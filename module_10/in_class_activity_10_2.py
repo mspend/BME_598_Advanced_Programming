@@ -5,12 +5,11 @@ Created on Tue Oct 28 09:33:10 2025
 
 @author: maurispendlove
 """
-
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import statsmodels.formula.api as smf
 
 # FEV = full expiratory volume, a marker for lung health and function
