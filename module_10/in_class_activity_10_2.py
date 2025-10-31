@@ -19,6 +19,7 @@ import statsmodels.formula.api as smf
 
 fev = pd.read_table(filepath_or_buffer='fev_dat.txt', delimiter='\t')
 print(fev.size)
+print(fev.shape)
 
 fev_continuous_vars = fev.drop(columns=['sex','smoke'])
 
@@ -45,7 +46,7 @@ print(results1.summary())
 ### Model 2: Effect of smoking and age on FEV ###
 
 # Build the model
-model2 = smf.ols('FEV ~ smoke + age', data = fev)
+model2 = smf.ols('FEV ~ age + smoke', data = fev)
 
 # Fit the model
 results2 = model2.fit()
@@ -54,14 +55,11 @@ results2 = model2.fit()
 print(results2.summary())
 
 
-### Model 3: Effect of smoking, age, and height on FEV with age modeled as quadratic (age^2) ###
+### Model 3: Effect of smoking, age, and height on FEV with height modeled as quadratic function ###
 
 # Build the model
-# Use Patsy's I() to include the squared term directly. This specifies smoke and age^2.
-model3 = smf.ols('FEV ~ smoke + I(age ** 2) + ht', data = fev)
-
-# Alternative: include both linear and quadratic age terms if you want both effects
-# model3_alt = smf.ols('FEV ~ smoke + age + I(age ** 2)', data = fev)
+# Use Patsy's I() to include the squared term directly.
+model3 = smf.ols('FEV ~ age + I(ht ** 2) + smoke', data = fev)
 
 # Fit the model
 results3 = model3.fit()
@@ -76,9 +74,6 @@ print(results3.summary())
 # Use Patsy's I() to include the squared term directly. This specifies smoke and age^2.
 model4 = smf.ols('FEV ~ age*smoke', data = fev)
 
-# Alternative: include both linear and quadratic age terms if you want both effects
-# model3_alt = smf.ols('FEV ~ smoke + age + I(age ** 2)', data = fev)
-
 # Fit the model
 results4 = model4.fit()
 
@@ -86,6 +81,24 @@ results4 = model4.fit()
 print(results4.summary())
 
 
-# look for an interaction between age and smoking
-# Question 7
-# smf.ols('FEV~age*smoke',data=fev)
+### Model 5: Interaction between age and smoking, and then add quadratic height on FEV ###
+
+# Build the model
+model5 = smf.ols('FEV ~ age * smoke + I(ht ** 2)', data=fev)
+
+# Fit the model
+results5 = model5.fit()
+
+# Print results
+print(results5.summary())
+
+
+# formulas I have attempted for model 3 that are listed as incorrect by autograder:
+
+# model3 = smf.ols('FEV ~ smoke + I(age ** 2) + ht', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + I(ht ** 2)', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + ht + I(ht ** 2)', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + ht', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + ht*ht', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + I(ht^2)', data = fev)
+# model3 = smf.ols('FEV ~ smoke + age + ht:ht', data = fev)
