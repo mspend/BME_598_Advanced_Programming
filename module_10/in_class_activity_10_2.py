@@ -6,9 +6,6 @@ Created on Tue Oct 28 09:33:10 2025
 @author: maurispendlove
 """
 
-import matplotlib
-# matplotlib.use('Agg')
-# matplotlib.rcParams['pdf.fonttype'] = 42
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -58,8 +55,7 @@ print(results2.summary())
 ### Model 3: Effect of smoking, age, and height on FEV with height modeled as quadratic function ###
 
 # Build the model
-# Use Patsy's I() to include the squared term directly.
-model3 = smf.ols('FEV ~ age + I(ht ** 2) + smoke', data = fev)
+model3 = smf.ols('FEV ~ age + ht + np.power(ht, 2) + smoke', data = fev)
 
 # Fit the model
 results3 = model3.fit()
@@ -84,7 +80,7 @@ print(results4.summary())
 ### Model 5: Interaction between age and smoking, and then add quadratic height on FEV ###
 
 # Build the model
-model5 = smf.ols('FEV ~ age * smoke + I(ht ** 2)', data=fev)
+model5 = smf.ols('FEV ~ age * smoke + ht + np.power(ht, 2)', data=fev)
 
 # Fit the model
 results5 = model5.fit()
