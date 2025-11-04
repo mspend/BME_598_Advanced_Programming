@@ -210,7 +210,7 @@ print(gse.gpls['GPL13712'].table.columns)
 
 ## Load gene info - separated by tabs not commas, and index_col is set to 1 not 0
 # https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/
-gene_info = pd.read_csv('data/Mus_musculus.gene_info', sep='\t', header = 0, index_col = 1)
+gene_info = pd.read_csv('Mus_musculus.gene_info', sep='\t', header = 0, index_col = 1)
 
 
 ## Translate Entrez gene ids to gene symbols
