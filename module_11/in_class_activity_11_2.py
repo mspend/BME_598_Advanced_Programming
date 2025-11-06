@@ -40,6 +40,7 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics import silhouette_score, silhouette_samples
 from scipy import stats
 
+# for simulating data
 from sklearn.datasets import make_blobs
 
 
