@@ -19,7 +19,7 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 from sklearn import cluster, datasets, mixture
 from sklearn.neighbors import kneighbors_graph
 from sklearn.manifold import TSNE
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, QuantileTransformer
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans, SpectralClustering, AgglomerativeClustering
 from sklearn.mixture import GaussianMixture
@@ -55,7 +55,50 @@ print(f'Meaning we dropped {num_dropped} GSM samples.')
 # if you don't log tansform the data, the data will be hard to plot
 expr3 = np.log2(expr2)
 
-plt.boxplot
-plt.xlabel('Samples')
-plt.ylabel('Expression (Log2(Signal))')
+# Make a boxplot of the log2 transformed data
+with PdfPages('boxplot_GSE11292_pre_transform.pdf') as pdf:
+    plt.boxplot(expr3)
+    plt.xlabel('Samples')
+    plt.ylabel('Expression (Log2(Signal))')
+    pdf.savefig()
+    pdf.close()
 
+# Quantile normalize the data
+expr4 = QuantileTransformer().fit_transform(expr3)
+# Unfortunatley, the above function converts expr3 into a numpy array, so we lose the index and columns.
+# Convert it back to a DataFrame and add the index and columns
+expr4 = pd.DataFrame(expr4)
+expr4.index = expr3.index
+expr4.columns = expr3.columns
+
+# Make a boxplot of the log2 transformed data
+with PdfPages('boxplot_GSE11292_post_transform.pdf') as pdf:
+    plt.boxplot(expr4)
+    plt.xlabel('Samples')
+    plt.ylabel('Expression (Log2(Signal))')
+    pdf.savefig()
+    pdf.close()
+
+
+## Feature selection
+top3000 = expr4.var(axis=1).sort_values(ascending=False).index[range(3000)]
+
+
+
+
+
+
+
+
+
+
+
+
+## Scaling
+tmp = StandardScaler().fit_transform(expr2.loc[top3000])
+
+
+# dictionry comprehension
+convert_GSMs = gse.phenotype_data['title'].to_dict()
+# grab the last element of the title
+convert_GSMs = {i:convert_GSMs[i].split('_')[-1] for i in convert_GSMs}
