@@ -9,6 +9,7 @@ import GEOparse
 
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 
 # these lines are important so the text on the PDF doesn't get cut up in weird ways
 matplotlib.use('Agg')
@@ -23,11 +24,38 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans, SpectralClustering, AgglomerativeClustering
 from sklearn.mixture import GaussianMixture
 from sklearn.metrics import silhouette_score, silhouette_samples
-from scipy import stats
-
 
 
 # not sure if we need these
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+# from matplotlib.patches import Patch
+
+# load up the data
+gse = GEOparse.get_GEO('GSE11292')
+
+
+## Get a list of GSMs
+print(gse.gsms.keys())
+print(f'The number of GSMs in this GSE is {len((gse.gsms.keys()))}.')
+
+## Create an expression matrix
+# Note: This won't work well with lots of samples!
+expr = gse.pivot_samples('VALUE')
+print(expr)
+
+
+# Getting rid of the ThGFP and ThGARP samples
+drop_me = ['GSM2850'+str(i) for i in range(45,51)]
+expr2 = expr.drop(drop_me, axis=1)
+print(f'After dropping the GFP and GARP, the dimensions of our expression matrix are {expr2.shape}.')
+num_dropped = expr.shape[1] - expr2.shape[1]
+print(f'Meaning we dropped {num_dropped} GSM samples.')
+
+# log2 transform our data
+# The data is very spread out
+# if you don't log tansform the data, the data will be hard to plot
+expr3 = np.log2(expr2)
+
+plt.boxplot
+plt.xlabel('Samples')
+plt.ylabel('Expression (Log2(Signal))')
 
