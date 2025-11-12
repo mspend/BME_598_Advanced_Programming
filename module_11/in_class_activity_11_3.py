@@ -76,14 +76,12 @@ expr4 = pd.DataFrame(expr4)
 expr4.index = expr3.index
 expr4.columns = expr3.columns
 
-# Make a boxplot of the log2 transformed data
+# Make a boxplot of the quantile normalized data
 with PdfPages('boxplot_GSE11292_post_transform.pdf') as pdf:
     plt.boxplot(expr4)
     plt.xlabel('Samples')
     plt.ylabel('Expression (Log2(Signal))')
     pdf.savefig()
-    pdf.close()
-
 
 ## Feature selection
 top3000 = expr4.var(axis=1).sort_values(ascending=False).index[range(3000)]
@@ -153,7 +151,6 @@ with PdfPages('km_silhouettes_GSE11292.pdf') as pdf:
 
         # Save figure to pdf
         pdf.savefig(fig)
-        plt.close()
 
     # Save plots to pdf
     fig = plt.figure()
@@ -162,7 +159,7 @@ with PdfPages('km_silhouettes_GSE11292.pdf') as pdf:
     plt.xlabel('Number of clusters')
     plt.ylabel('Average sihouette score')
     pdf.savefig(fig)
-    plt.close()
+    # plt.close()
 
 ## Return an eigengene for a gene expression data given a set of genes
 def getEigengene(gexp, genes):
