@@ -91,7 +91,7 @@ with PdfPages('boxplot_GSE11292_post_transform.pdf') as pdf:
 top3000 = expr4.var(axis=1).sort_values(ascending=False).index[range(3000)]
 
 ## Standardize data
-tmp = StandardScaler().fit_transform(expr2.loc[top3000])
+tmp = StandardScaler().fit_transform(expr4.loc[top3000])
 
 ## Cluster using kMeans
 # Compute silhouette scores and plots for k-means clustering applied across a range of 2 to 20 clusters
@@ -188,7 +188,6 @@ col_colors = [colors[convert_GSMs[i]] for i in expr2.columns]
 
 # Plot clustermap
 sns.clustermap(eigengenes.T, cmap = sns.color_palette("vlag",n_colors=33), col_colors=col_colors, col_cluster=False)
-plt.show()
 
 # Make it into a PDF
 with PdfPages('eigengenes_GSE11292.pdf') as pdf:
@@ -196,13 +195,3 @@ with PdfPages('eigengenes_GSE11292.pdf') as pdf:
     sns.clustermap(eigengenes.T, cmap=sns.color_palette('vlag', n_colors=33), col_colors=col_colors, col_cluster=False)
     pdf.savefig()
     plt.close()
-
-
-
-
-
-
-
-
-
-

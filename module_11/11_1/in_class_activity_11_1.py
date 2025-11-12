@@ -122,6 +122,8 @@ with PdfPages('KMeans_clustering.pdf') as pdf:
 import numpy as np
 
 # Iterate across possible k values, and compute inertia
+# Lower inertia values indicate data points are relatively close to their respective centroids
+# When the inertia begins to plateau, and the slope significantly decreases, that is the elbow
 inertias = []
 for k in range(1, 10):
     km = KMeans(n_clusters=k, random_state=0)
