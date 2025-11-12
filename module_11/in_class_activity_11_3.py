@@ -166,8 +166,36 @@ with PdfPages('km_silhouettes_GSE11292.pdf') as pdf:
     pdf.savefig(fig)
     plt.close()
 
+## Return an eigengene for a gene expression data given a set of genes
+def getEigengene(gexp, genes):
+    pca = PCA(n_components=1)
+    gexp_pca = pd.DataFrame(pca.fit(gexp.loc[genes].T).transform(gexp.loc[genes].T), index = gexp.columns)
+    eigengene = gexp_pca[0]
+    if sum([stats.pearsonr(gexp.loc[i],eigengene)[0] for i in genes])/len(genes) > 0:
+        return eigengene
+    else:
+        return -eigengene
 
+# Chose k = 4
+km1 = KMeans(n_clusters = 4).fit(tmp)
+print(km1.labels_)
+eigengenes = pd.concat([getEigengene(expr2.loc[top3000], top3000[km1.labels_==i]) for i in range(len(set(km1.labels_)))], axis = 1)
+eigengenes.columns = range(len(set(km1.labels_)))
 
+# Make column and row colors
+colors = dict(zip(['T'+str(i)+'min' for i in range(0, 380, 20)], sns.color_palette('Greys', n_colors=19)))
+col_colors = [colors[convert_GSMs[i]] for i in expr2.columns]
+
+# Plot clustermap
+sns.clustermap(eigengenes.T, cmap = sns.color_palette("vlag",n_colors=33), col_colors=col_colors, col_cluster=False)
+plt.show()
+
+# Make it into a PDF
+with PdfPages('eigengenes_GSE11292.pdf') as pdf:
+    # Plot clustermap
+    sns.clustermap(eigengenes.T, cmap=sns.color_palette('vlag', n_colors=33), col_colors=col_colors, col_cluster=False)
+    pdf.savefig()
+    plt.close()
 
 
 
