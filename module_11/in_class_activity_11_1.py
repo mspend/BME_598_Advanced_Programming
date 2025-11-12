@@ -34,6 +34,7 @@ import seaborn as sns
 from sklearn.datasets import make_blobs
 
 # Simulate some data
+# changing the standard deviation will change how tight the clusters are
 X, y_true = make_blobs(n_samples=300, centers=4, cluster_std=0.8, random_state=0)
 
 # Plot the data
@@ -69,6 +70,8 @@ import matplotlib.pyplot as plt
 Z = linkage(X, method="ward")
 
 # Plot linkage matrix as dendrogram
+# hierarchical clustering, uses a dendrogram
+# The number of clusters is determined by where you cut the dendrogram
 with PdfPages('hierarchical_clustering_dendrogram.pdf') as pdf:
     plt.figure(figsize=(10, 5))
     dendrogram(Z)
@@ -96,6 +99,7 @@ with PdfPages('hierarchical_clustering_dendrogram_wClusters.pdf') as pdf:
 from sklearn.cluster import KMeans
 
 # Conduct KMeans clustering on data
+# In KMeans you need to know the number of clusters a priori
 kmeans = KMeans(n_clusters=4, random_state=0)
 kmeans.fit(X)
 labels = kmeans.labels_
@@ -124,6 +128,8 @@ for k in range(1, 10):
     km.fit(X)
     inertias.append(km.inertia_)
 
+# An elbow plot is a way to tell how many clusters you should choose. There is a point where you get marginal increases in variance explained, or in inertia.
+# In this case, K<=4 has increasing information and variance explained but K > 4 has only marginal benefits
 with PdfPages('KMeans_elbow_plot.pdf') as pdf:
     plt.plot(range(1, 10), inertias, 'o-')
     plt.xlabel("Number of clusters (k)")
@@ -139,6 +145,9 @@ with PdfPages('KMeans_elbow_plot.pdf') as pdf:
 
 from sklearn.metrics import adjusted_mutual_info_score # called AMI
 
-print(adjusted_mutual_info_score(y_true, fcluster(Z, t=4, criterion='maxclust')))
-print(adjusted_mutual_info_score(y_true, kmeans.labels_))
+# Aglomerative clustering
+print(f'The AMI for aglomerative clustering is {adjusted_mutual_info_score(y_true, fcluster(Z, t=4, criterion='maxclust'))}')
+
+# K means clustering
+print(f'The AMI for K-means clustering is {adjusted_mutual_info_score(y_true, kmeans.labels_)}')
 
