@@ -97,7 +97,7 @@ tmp = StandardScaler().fit_transform(expr2.loc[top3000])
 # Compute silhouette scores and plots for k-means clustering applied across a range of 2 to 20 clusters
 sil_km = []
 with PdfPages('km_silhouettes_GSE11292.pdf') as pdf:
-    for i in range(2,10):
+    for i in range(2,20):
         n_clusters = i
         km1 = KMeans(n_clusters=i).fit(tmp)
 
