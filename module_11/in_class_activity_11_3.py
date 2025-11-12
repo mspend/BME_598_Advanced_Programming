@@ -49,7 +49,6 @@ print(gse.phenotype_data.loc['GSM285027'])
 convert_GSMs = gse.phenotype_data['title'].to_dict()
 convert_GSMs = {i:convert_GSMs[i].split('_')[-1] for i in convert_GSMs} 
 
-
 # Getting rid of the ThGFP and ThGARP samples
 drop_me = ['GSM2850'+str(i) for i in range(45,51)]
 expr2 = expr.drop(drop_me, axis=1)
@@ -68,7 +67,6 @@ with PdfPages('boxplot_GSE11292_pre_transform.pdf') as pdf:
     plt.xlabel('Samples')
     plt.ylabel('Expression (Log2(Signal))')
     pdf.savefig()
-    pdf.close()
 
 # Quantile normalize the data
 expr4 = QuantileTransformer().fit_transform(expr3)
