@@ -42,6 +42,13 @@ print(f'The number of GSMs in this GSE is {len((gse.gsms.keys()))}.')
 expr = gse.pivot_samples('VALUE')
 print(expr)
 
+## Print out phenotype data
+# Be sure to add the code below for colorizing based on time points later
+print(gse.phenotype_data)
+print(gse.phenotype_data.loc['GSM285027'])
+convert_GSMs = gse.phenotype_data['title'].to_dict()
+convert_GSMs = {i:convert_GSMs[i].split('_')[-1] for i in convert_GSMs} 
+
 
 # Getting rid of the ThGFP and ThGARP samples
 drop_me = ['GSM2850'+str(i) for i in range(45,51)]
@@ -87,6 +94,8 @@ top3000 = expr4.var(axis=1).sort_values(ascending=False).index[range(3000)]
 
 
 
+##### I"m on question 7
+## Compute silhouette scores and plots for k-means clustering applied across a range of 2 to 20 clusters
 
 
 
@@ -94,11 +103,11 @@ top3000 = expr4.var(axis=1).sort_values(ascending=False).index[range(3000)]
 
 
 
-## Scaling
-tmp = StandardScaler().fit_transform(expr2.loc[top3000])
 
 
-# dictionry comprehension
-convert_GSMs = gse.phenotype_data['title'].to_dict()
-# grab the last element of the title
-convert_GSMs = {i:convert_GSMs[i].split('_')[-1] for i in convert_GSMs}
+
+
+
+# ## Scaling
+# tmp = StandardScaler().fit_transform(expr2.loc[top3000])
+
