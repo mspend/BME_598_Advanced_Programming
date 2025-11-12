@@ -74,23 +74,6 @@ with PdfPages('KMeans_elbow_plot.pdf') as pdf:
     pdf.savefig()
     plt.close()
 
-
-## Iterate across possible k values, and compute inertia
-inertias = []
-for k in range(1, 10):
-    km = KMeans(n_clusters=k, random_state=0)
-    km.fit(X)
-    inertias.append(km.inertia_)
-
-with PdfPages('KMeans_elbow_plot.pdf') as pdf:
-    plt.plot(range(1, 10), inertias, 'o-')
-    plt.xlabel("Number of clusters (k)")
-    plt.ylabel("Inertia")
-    plt.title("Elbow Method")
-    pdf.savefig()
-    plt.close()
-
-
 ## Stadardize data
 tmp = StandardScaler().fit_transform(X)
 
