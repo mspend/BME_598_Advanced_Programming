@@ -13,3 +13,16 @@
 - Apply hypothesis testing statistics to real-world datasets
 - Apply both clustering and classification machine learning
 - Segment cells and nuclei from microscopy slides
+
+# Module Topics and Skills
+- Module 1: Why Use Python, Python Style  Guide(PEP8), and IDEs
+- Module 2: Intro to Python (no assignments posted to GitHub)
+- Module 3: File Types, File Compression, Modules, Packages, and JSON files
+- Module 4: Pandas and DataFrames
+- Module 5: Plotting with Matplotlib and Scipy.stats
+- Module 6: Plotting with Seaborn and Hypothesis Testing using T-tests
+- Module 7: Correlation, T-tests, and Effect size
+- Module 8: GEOparse to access data from the Gene Expression Omnibus
+- Module 9: Differential Gene Expression and Multiple Hypothesis Correction
+- Module 10: Linear Regression
+- Module 11: Clustering
