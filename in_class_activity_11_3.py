@@ -151,15 +151,18 @@ with PdfPages('km_silhouettes_GSE11292.pdf') as pdf:
 
         # Save figure to pdf
         pdf.savefig(fig)
+        plt.close()
 
-    # Save plots to pdf
+    # Finally, plot silhouette score vs. number of clusters
     fig = plt.figure()
-    plt.plot(range(2,10),sil_km)
-    plt.xticks(range(2,10))
+    plt.plot(range(2,20),sil_km)
+    plt.xticks(range(2,20))
     plt.xlabel('Number of clusters')
-    plt.ylabel('Average sihouette score')
+    plt.ylabel('Average silhouette score')
+    plt.title('Silhouette analysis for KMeans')
     pdf.savefig(fig)
-    # plt.close()
+    plt.close()
+
 
 ## Return an eigengene for a gene expression data given a set of genes
 def getEigengene(gexp, genes):
