@@ -66,7 +66,7 @@ with PdfPages('boxplot_GSE11292_pre_transform.pdf') as pdf:
 
 # Quantile normalize the data
 expr4 = QuantileTransformer().fit_transform(expr3)
-# Unfortunatley, the above function converts expr3 into a numpy array, so we lose the index and columns.
+# Unfortunately, the above function converts expr3 into a numpy array, so we lose the index and columns.
 # Convert it back to a DataFrame and add the index and columns
 expr4 = pd.DataFrame(expr4)
 expr4.index = expr3.index
