@@ -170,22 +170,68 @@ def getEigengene(gexp, genes):
     else:
         return -eigengene
 
-# Chose k = 4
-km1 = KMeans(n_clusters = 4).fit(tmp)
-print(km1.labels_)
-eigengenes = pd.concat([getEigengene(expr2.loc[top3000], top3000[km1.labels_==i]) for i in range(len(set(km1.labels_)))], axis = 1)
-eigengenes.columns = range(len(set(km1.labels_)))
+# Run KMeans clustering
+k = 6
+km1 = KMeans(n_clusters=k, random_state=42).fit(tmp)
 
-# Make column and row colors
-colors = dict(zip(['T'+str(i)+'min' for i in range(0, 380, 20)], sns.color_palette('Greys', n_colors=19)))
+# Compute eigengenes for each cluster
+eigengenes = pd.concat(
+    [getEigengene(expr2.loc[top3000], top3000[km1.labels_ == i]) for i in range(k)],
+    axis=1
+)
+eigengenes.columns = [f"Cluster {i+1}" for i in range(k)]
+
+# Z-score eigengenes across samples
+eigengenes_z = pd.DataFrame(
+    StandardScaler().fit_transform(eigengenes),
+    index=eigengenes.index,
+    columns=eigengenes.columns
+)
+
+# Clip to highlight relative differences
+eigengenes_z_clipped = eigengenes_z.clip(-2, 2)
+
+# Define timepoint colors
+time_labels = ['T' + str(i) + 'min' for i in range(0, 380, 20)]
+colors = dict(zip(time_labels, sns.color_palette('coolwarm', n_colors=len(time_labels))))
 col_colors = [colors[convert_GSMs[i]] for i in expr2.columns]
 
-# Plot clustermap
-sns.clustermap(eigengenes.T, cmap = sns.color_palette("vlag",n_colors=33), col_colors=col_colors, col_cluster=False)
+# Create clustermap
+g = sns.clustermap(
+    eigengenes_z_clipped.T,
+    cmap="RdBu_r",
+    col_colors=col_colors,
+    col_cluster=False,
+    center=0,
+    vmin=-2, vmax=2,
+    figsize=(10, 8)  # taller figure to fit legend + title comfortably
+)
 
-# Make it into a PDF
-with PdfPages('eigengenes_GSE11292.pdf') as pdf:
-    # Plot clustermap
-    sns.clustermap(eigengenes.T, cmap=sns.color_palette('vlag', n_colors=33), col_colors=col_colors, col_cluster=False)
-    pdf.savefig()
-    plt.close()
+# Add a title BELOW the legend (using ax_heatmap title instead of suptitle)
+g.ax_heatmap.set_title("Z-scored Eigengenes of K-Means Clusters (k=6)", fontsize=14, pad=30)
+
+# Label axes
+g.ax_heatmap.set_xlabel("Samples / Time Points", fontsize=12)
+g.ax_heatmap.set_ylabel("Cluster Eigengenes", fontsize=12)
+
+# Add legend for timepoints
+for label in time_labels:
+    g.ax_col_dendrogram.bar(0, 0, color=colors[label], label=label, linewidth=0)
+
+# Position legend slightly higher so it doesn't overlap the title
+g.ax_col_dendrogram.legend(
+    loc="upper center",
+    ncol=4,
+    bbox_to_anchor=(0.5, 1.3),  # move legend higher
+    title="Time Points",
+    fontsize=8,
+    title_fontsize=9
+)
+
+# Adjust layout so nothing overlaps
+plt.subplots_adjust(top=0.9, bottom=0.1)
+
+# Save to PDF
+with PdfPages('eigengenes_GSE11292_highcontrast_tidy.pdf') as pdf:
+    pdf.savefig(g.fig, bbox_inches='tight')
+    plt.close(g.fig)
