@@ -16,13 +16,9 @@ matplotlib.use('Agg')
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 # clustering packages
-from sklearn import cluster, datasets, mixture
-from sklearn.neighbors import kneighbors_graph
-from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler, QuantileTransformer
 from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans, SpectralClustering, AgglomerativeClustering
-from sklearn.mixture import GaussianMixture
+from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, silhouette_samples
 
 
