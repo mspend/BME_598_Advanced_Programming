@@ -74,7 +74,7 @@ phenosTrain = gseTrain.phenotype_data[['characteristics_ch1.0.gender','character
 phenosTrain.columns = ['gender','ethnicity','disease_state']
 phenosTrain
 
-# Get rid of cacner and 
+# Get rid of cancer
 subset_train = phenosTrain.index[phenosTrain['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
 phenosTrain = phenosTrain.loc[subset_train]
 
@@ -86,7 +86,7 @@ phenosTest = gseTest.phenotype_data[['characteristics_ch1.0.gender','characteris
 phenosTest.columns = ['gender','ethnicity','disease_state']
 print(phenosTest['disease_state'].value_counts())
 
-# Get rid of cacner and 
+# Get rid of cancer and 
 subset_test = phenosTest.index[phenosTest['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
 phenosTest = phenosTest.loc[subset_test]
 
