@@ -26,4 +26,4 @@
 - Module 9: Differential Gene Expression and Multiple Hypothesis Correction
 - Module 10: Linear Regression
 - Module 11: Clustering
-- Module 12: Classification with Sklearn (Nearest Neighbor and Random Forest) and Deep Learning
+- Module 12: Classification using Sklearn (Nearest Neighbor and Random Forest) and Deep Learning
