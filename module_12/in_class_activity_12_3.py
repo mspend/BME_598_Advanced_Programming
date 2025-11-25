@@ -131,77 +131,80 @@ X_train_scaled = scaler.fit_transform(gexpTrain.loc[top1000].T)
 X_test_scaled  = scaler.transform(gexpTest.loc[top1000].T)
 
 # Define the y values
-y_tran = 
+convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Non-active sarcoidosis': 2, 'Control': 3}
+y_train = to_categorical([convertMe[i] for i in phenosTrain['disease_state']],4)
+y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],4)
+
+## 7.Build a small dense network for tabular classification
+# Using Sequential model
 
 
 
-# Define the y values
-convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Non-actives sarcoidosis': 2, 'Control': 3}
-y_train = to_categorical([convertMe[i] for i in phenosTrain['disease state']],4])
-y_test = to_categorical([convertMe[i] for i in phenosTest['disease state']],4])
 
-## 7. Training the model
-history = model.fit(
-    X_train_scaled, y_train,
-    validation_split=0.15,
-    epochs=100,
-    batch_size=32,
-    verbose=2
-)
 
-## 8. Evaluate on test set: metrics important in biomedical context
-y_proba = model.predict(X_test_scaled).ravel()
-y_pred = (y_proba >= 0.5).astype(int)
 
-acc = accuracy_score(y_test, y_pred)
-prec = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)   # sensitivity / recall
-auc = roc_auc_score(y_test, y_proba)
+# ## 7. Training the model
+# history = model.fit(
+#     X_train_scaled, y_train,
+#     validation_split=0.15,
+#     epochs=100,
+#     batch_size=32,
+#     verbose=2
+# )
 
-print(f"Test accuracy: {acc:.4f}")
-print(f"Test precision: {prec:.4f}")
-print(f"Test recall (sensitivity): {recall:.4f}")
-print(f"Test ROC AUC: {auc:.4f}")
+# ## 8. Evaluate on test set: metrics important in biomedical context
+# y_proba = model.predict(X_test_scaled).ravel()
+# y_pred = (y_proba >= 0.5).astype(int)
 
-# Confusion matrix: [ [TN, FP], [FN, TP] ]
-cm = confusion_matrix(y_test, y_pred)
-tn, fp, fn, tp = cm.ravel()
-specificity = tn / (tn + fp)
-print("Confusion matrix:\n", cm)
-print(f"Specificity: {specificity:.4f}")
+# acc = accuracy_score(y_test, y_pred)
+# prec = precision_score(y_test, y_pred)
+# recall = recall_score(y_test, y_pred)   # sensitivity / recall
+# auc = roc_auc_score(y_test, y_proba)
 
-## 9. Plot ROC and training curves
-with PdfPages('training_curves_multiclass.pdf') as pdf:
-    fig, ax = plt.subplots(1,2, figsize=(12,4))
-    ax[0].plot(history.history['loss'], label='train_loss')
-    ax[0].plot(history.history['val_loss'], label='val_loss')
-    ax[0].set_xlabel('Epoch')
-    ax[0].set_ylabel('Loss')
-    ax[0].legend()
+# print(f"Test accuracy: {acc:.4f}")
+# print(f"Test precision: {prec:.4f}")
+# print(f"Test recall (sensitivity): {recall:.4f}")
+# print(f"Test ROC AUC: {auc:.4f}")
+
+# # Confusion matrix: [ [TN, FP], [FN, TP] ]
+# cm = confusion_matrix(y_test, y_pred)
+# tn, fp, fn, tp = cm.ravel()
+# specificity = tn / (tn + fp)
+# print("Confusion matrix:\n", cm)
+# print(f"Specificity: {specificity:.4f}")
+
+# ## 9. Plot ROC and training curves
+# with PdfPages('training_curves_multiclass.pdf') as pdf:
+#     fig, ax = plt.subplots(1,2, figsize=(12,4))
+#     ax[0].plot(history.history['loss'], label='train_loss')
+#     ax[0].plot(history.history['val_loss'], label='val_loss')
+#     ax[0].set_xlabel('Epoch')
+#     ax[0].set_ylabel('Loss')
+#     ax[0].legend()
         
-    if 'accuracy' in history.history:
-        ax[1].plot(history.history['accuracy'], label='train_acc')
-        ax[1].plot(history.history['val_accuracy'], label='val_acc')
-        ax[1].set_xlabel('Epoch')
-        ax[1].set_ylabel('Accuracy')    
-        ax[1].legend()
-    pdf.savefig()
-    plt.close()
+#     if 'accuracy' in history.history:
+#         ax[1].plot(history.history['accuracy'], label='train_acc')
+#         ax[1].plot(history.history['val_accuracy'], label='val_acc')
+#         ax[1].set_xlabel('Epoch')
+#         ax[1].set_ylabel('Accuracy')    
+#         ax[1].legend()
+#     pdf.savefig()
+#     plt.close()
     
-with PdfPages('ROC_curve_multiclass.pdf') as pdf:
-    # ROC
-    fpr, tpr, _ = roc_curve(y_test, y_proba)
-    plt.figure(figsize=(6,6))
-    plt.plot(fpr, tpr, label=f"AUC = {roc_auc_score(y_test, y_proba):.3f}")
-    plt.plot([0,1], [0,1], linestyle='--')
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate (Sensitivity)')
-    plt.title('ROC Curve')
-    plt.legend()
-    pdf.savefig()
-    plt.close()
+# with PdfPages('ROC_curve_multiclass.pdf') as pdf:
+#     # ROC
+#     fpr, tpr, _ = roc_curve(y_test, y_proba)
+#     plt.figure(figsize=(6,6))
+#     plt.plot(fpr, tpr, label=f"AUC = {roc_auc_score(y_test, y_proba):.3f}")
+#     plt.plot([0,1], [0,1], linestyle='--')
+#     plt.xlabel('False Positive Rate')
+#     plt.ylabel('True Positive Rate (Sensitivity)')
+#     plt.title('ROC Curve')
+#     plt.legend()
+#     pdf.savefig()
+#     plt.close()
 
 
-## 10. Save model in keras format
-model.save('breast_cancer_nn_savedmodel.keras')
+# ## 10. Save model in keras format
+# model.save('breast_cancer_nn_savedmodel.keras')
 
