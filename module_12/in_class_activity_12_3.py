@@ -77,7 +77,6 @@ phenosTrain
 # What disease states are present in the training dataset?
 print(phenosTrain['disease_state'].value_counts())
 
-
 # Get rid of lung cancer and Baseline 
 # (How is baseline different from control? We don't know)
 subset_train = phenosTrain.index[phenosTrain['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
@@ -96,11 +95,15 @@ print(phenosTest['disease_state'].value_counts())
 # Get rid of cancer and pneumonia
 subset_test = phenosTest.index[phenosTest['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
 phenosTest = phenosTest.loc[subset_test]
+print(phenosTest['disease_state'].value_counts())
 
 # Phenotypes for validation dataset (GSE42825)
 phenosValidation = gseValidation.phenotype_data[['characteristics_ch1.0.gender','characteristics_ch1.1.ethnicity','characteristics_ch1.2.disease state']]
 phenosValidation.columns = ['gender','ethnicity','disease_state']
+
+# What disease states are present in the validation dataset?
 print(phenosValidation['disease_state'].value_counts())
+
 # Uh-oh! Active sarcoidosis does not equal Active Sarcoid, from GSE42830 and GSE42826
 # Let's fix it by harmonizing the validation to Active Sarcoid
 phenosValidation.loc[phenosValidation.disease_state=='Active sarcoidosis','disease_state'] = 'Active Sarcoid'
@@ -121,34 +124,8 @@ gexpValidation = gseValidation.pivot_samples('VALUE')
 ## 5. Feature Selection
 top1000 = gexpTrain
 
-# ## 3. Train/test split (stratify to keep class ratios)
-# X_train, X_test, y_train, y_test = train_test_split(
-#     X, y, test_size=0.2, random_state=seed, stratify=y
-# )
 
 
-# ## 4. Preprocess: standard scaling (important for NN on tabular features)
-# scaler = StandardScaler()
-# X_train_scaled = scaler.fit_transform(X_train)
-# X_test_scaled  = scaler.transform(X_test)
-
-
-# ## 5. Build a small dense network for tabular classification
-# # Using Sequential model
-# # 1. Input layer 30 nodes
-# # 2. Dense layer 20 nodes, activation relu
-# # 3. Dropout 0.3
-# # 4. Dense layer 20 nodes, activation relu
-# # 5. Dropout 0.3
-# # 6. Dense layer 10 nodes, activation relu
-# model = models.Sequential([layers.Input(shape=(X_train_scaled.shape[1],)),
-#                            layers.Dense(20, activation='relu'),
-#                            layers.Dropout(0.3),
-#                            layers.Dense(10, activation='relu'),
-#                            layers.Dropout(0.2),
-#                            # Binary classification = sigmoid, multiple class classification = softmax
-#                            layers.Dense(1, activation='sigmoid')
-#                            ])
 
 model.summary()
 
