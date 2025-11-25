@@ -74,7 +74,12 @@ phenosTrain = gseTrain.phenotype_data[['characteristics_ch1.0.gender','character
 phenosTrain.columns = ['gender','ethnicity','disease_state']
 phenosTrain
 
-# Get rid of cancer
+# What disease states are present in the training dataset?
+print(phenosTrain['disease_state'].value_counts())
+
+
+# Get rid of lung cancer and Baseline 
+# (How is baseline different from control? We don't know)
 subset_train = phenosTrain.index[phenosTrain['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
 phenosTrain = phenosTrain.loc[subset_train]
 
@@ -84,9 +89,11 @@ print(phenosTrain['disease_state'].value_counts())
 # Phenotypes for test dataset (GSE42826)
 phenosTest = gseTest.phenotype_data[['characteristics_ch1.0.gender','characteristics_ch1.1.ethnicity','characteristics_ch1.2.disease state']]
 phenosTest.columns = ['gender','ethnicity','disease_state']
+
+# What disease states are present in the testing dataset?
 print(phenosTest['disease_state'].value_counts())
 
-# Get rid of cancer 
+# Get rid of cancer and pneumonia
 subset_test = phenosTest.index[phenosTest['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
 phenosTest = phenosTest.loc[subset_test]
 
