@@ -148,8 +148,9 @@ model = models.Sequential([layers.Input(shape=(X_train_scaled.shape[1],)),
                            layers.Dropout(0.3),
                            layers.Dense(10, activation='relu'),
                            layers.Dropout(0.2),
-                           # Binary classification = sigmoid, multiple class classification = softmax
-                           layers.Dense(1, activation='softmax')
+                           # For multiclass classification use softmax with number of classes
+                           # (we have 4 disease states so the output dimension must be 4)
+                           layers.Dense(4, activation='softmax')
                            ])
 
 model.summary()
