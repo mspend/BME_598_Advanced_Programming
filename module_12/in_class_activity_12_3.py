@@ -173,59 +173,74 @@ history = model.fit(
     verbose=2
 )
 
-# ## Evaluate on test set: metrics important in biomedical context
-# y_proba = model.predict(X_test_scaled).ravel()
-# y_pred = (y_proba >= 0.5).astype(int)
+## 8. Evaluate on test set: 
+# model.predict returns shape (N, num_classes) for softmax
+y_proba = model.predict(X_test_scaled)
 
-# acc = accuracy_score(y_test, y_pred)
-# prec = precision_score(y_test, y_pred)
-# recall = recall_score(y_test, y_pred)   # sensitivity / recall
-# auc = roc_auc_score(y_test, y_proba)
+# class predictions = index of highest probability
+y_pred = np.argmax(y_proba, axis=1)
 
-# print(f"Test accuracy: {acc:.4f}")
-# print(f"Test precision: {prec:.4f}")
-# print(f"Test recall (sensitivity): {recall:.4f}")
-# print(f"Test ROC AUC: {auc:.4f}")
+# if y_test is one-hot, convert to integer labels
+y_test_labels = np.argmax(y_test, axis=1)
 
-# # Confusion matrix: [ [TN, FP], [FN, TP] ]
-# cm = confusion_matrix(y_test, y_pred)
-# tn, fp, fn, tp = cm.ravel()
-# specificity = tn / (tn + fp)
-# print("Confusion matrix:\n", cm)
-# print(f"Specificity: {specificity:.4f}")
+acc = accuracy_score(y_test_labels, y_pred)
+prec = precision_score(y_test_labels, y_pred, average='macro')
+recall = recall_score(y_test_labels, y_pred, average='macro')
 
-# ## 9. Plot ROC and training curves
-# with PdfPages('training_curves_multiclass.pdf') as pdf:
-#     fig, ax = plt.subplots(1,2, figsize=(12,4))
-#     ax[0].plot(history.history['loss'], label='train_loss')
-#     ax[0].plot(history.history['val_loss'], label='val_loss')
-#     ax[0].set_xlabel('Epoch')
-#     ax[0].set_ylabel('Loss')
-#     ax[0].legend()
+# multiclass ROC AUC (one-vs-rest)
+auc = roc_auc_score(y_test, y_proba, multi_class='ovr')
+
+print(f"Test accuracy: {acc:.4f}")
+print(f"Test precision: {prec:.4f}")
+print(f"Test recall (sensitivity): {recall:.4f}")
+print(f"Test ROC AUC: {auc:.4f}")
+
+
+
+
+
+
+
+
+# Confusion matrix: [ [TN, FP], [FN, TP] ]
+cm = confusion_matrix(y_test, y_pred)
+tn, fp, fn, tp = cm.ravel()
+specificity = tn / (tn + fp)
+print("Confusion matrix:\n", cm)
+print(f"Specificity: {specificity:.4f}")
+
+## 9. Plot ROC and training curves
+with PdfPages('training_curves_multiclass.pdf') as pdf:
+    fig, ax = plt.subplots(1,2, figsize=(12,4))
+    ax[0].plot(history.history['loss'], label='train_loss')
+    ax[0].plot(history.history['val_loss'], label='val_loss')
+    ax[0].set_xlabel('Epoch')
+    ax[0].set_ylabel('Loss')
+    ax[0].legend()
         
-#     if 'accuracy' in history.history:
-#         ax[1].plot(history.history['accuracy'], label='train_acc')
-#         ax[1].plot(history.history['val_accuracy'], label='val_acc')
-#         ax[1].set_xlabel('Epoch')
-#         ax[1].set_ylabel('Accuracy')    
-#         ax[1].legend()
-#     pdf.savefig()
-#     plt.close()
+    if 'accuracy' in history.history:
+        ax[1].plot(history.history['accuracy'], label='train_acc')
+        ax[1].plot(history.history['val_accuracy'], label='val_acc')
+        ax[1].set_xlabel('Epoch')
+        ax[1].set_ylabel('Accuracy')    
+        ax[1].legend()
+    pdf.savefig()
+    plt.close()
     
-# with PdfPages('ROC_curve_multiclass.pdf') as pdf:
-#     # ROC
-#     fpr, tpr, _ = roc_curve(y_test, y_proba)
-#     plt.figure(figsize=(6,6))
-#     plt.plot(fpr, tpr, label=f"AUC = {roc_auc_score(y_test, y_proba):.3f}")
-#     plt.plot([0,1], [0,1], linestyle='--')
-#     plt.xlabel('False Positive Rate')
-#     plt.ylabel('True Positive Rate (Sensitivity)')
-#     plt.title('ROC Curve')
-#     plt.legend()
-#     pdf.savefig()
-#     plt.close()
+with PdfPages('ROC_curve_multiclass.pdf') as pdf:
+    # ROC
+    fpr, tpr, _ = roc_curve(y_test, y_proba)
+    plt.figure(figsize=(6,6))
+    plt.plot(fpr, tpr, label=f"AUC = {roc_auc_score(y_test, y_proba):.3f}")
+    plt.plot([0,1], [0,1], linestyle='--')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate (Sensitivity)')
+    plt.title('ROC Curve')
+    plt.legend()
+    pdf.savefig()
+    plt.close()
 
 
-# ## 10. Save model in keras format
-# model.save('breast_cancer_nn_savedmodel.keras')
+## 10. Save model in keras format
+model.save('breast_cancer_nn_savedmodel.keras')
 
