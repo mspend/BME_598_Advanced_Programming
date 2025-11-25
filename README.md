@@ -27,3 +27,4 @@
 - Module 10: Linear Regression
 - Module 11: Clustering
 - Module 12: Classification using Sklearn (Nearest Neighbor and Random Forest) and Deep Learning
+- Module 13: Markov Chains and Hidden Markov Models
