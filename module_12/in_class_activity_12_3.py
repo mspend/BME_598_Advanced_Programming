@@ -122,19 +122,18 @@ gexpTest = gseTest.pivot_samples('VALUE').loc[:,subset_test]
 gexpValidation = gseValidation.pivot_samples('VALUE')
 
 ## 5. Feature Selection
-top1000 = gexpTrain
+top1000 = gexpTrain.var(axis=1).sort_values(ascending=False).index[range(1000)]
+
+## 6. Preprocess: standard scaling (important for NN on tabular features)
+# Why do you use fit_transform on the train data and transform on the test data?
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(gexpTrain.loc[top1000].T)
+X_test_scaled  = scaler.transform(gexpTest.loc[top1000].T)
+
+# Define the y values
+y_tran = 
 
 
-
-
-model.summary()
-
-## 6. Compile
-model.compile(
-    optimizer=optimizers.SGD(),
-    loss='binary_crossentropy',
-    metrics=['accuracy']
-)
 
 # Define the y values
 convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Non-actives sarcoidosis': 2, 'Control': 3}
@@ -205,3 +204,4 @@ with PdfPages('ROC_curve_multiclass.pdf') as pdf:
 
 ## 10. Save model in keras format
 model.save('breast_cancer_nn_savedmodel.keras')
+
