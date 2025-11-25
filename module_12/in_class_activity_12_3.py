@@ -137,22 +137,42 @@ y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],4)
 
 ## 7.Build a small dense network for tabular classification
 # Using Sequential model
+# 1. Input layer 30 nodes
+# 2. Dense layer 20 nodes, activation relu
+# 3. Dropout 0.3
+# 4. Dense layer 20 nodes, activation relu
+# 5. Dropout 0.3
+# 6. Dense layer 10 nodes, activation relu
+model = models.Sequential([layers.Input(shape=(X_train_scaled.shape[1],)),
+                           layers.Dense(20, activation='relu'),
+                           layers.Dropout(0.3),
+                           layers.Dense(10, activation='relu'),
+                           layers.Dropout(0.2),
+                           # Binary classification = sigmoid, multiple class classification = softmax
+                           layers.Dense(1, activation='softmax')
+                           ])
+
+model.summary()
+
+## need to modify this to use something other than binary_cross entropy. our classifier has 4 classes
+## Compile
+model.compile(
+    optimizer=optimizers.SGD(),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
 
 
+## 8. Training the model
+history = model.fit(
+    X_train_scaled, y_train,
+    validation_split=0.15,
+    epochs=100,
+    batch_size=32,
+    verbose=2
+)
 
-
-
-
-# ## 7. Training the model
-# history = model.fit(
-#     X_train_scaled, y_train,
-#     validation_split=0.15,
-#     epochs=100,
-#     batch_size=32,
-#     verbose=2
-# )
-
-# ## 8. Evaluate on test set: metrics important in biomedical context
+# ## Evaluate on test set: metrics important in biomedical context
 # y_proba = model.predict(X_test_scaled).ravel()
 # y_pred = (y_proba >= 0.5).astype(int)
 
