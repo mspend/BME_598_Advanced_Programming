@@ -177,6 +177,7 @@ history = model.fit(
 # model.predict returns shape (N, num_classes) for softmax
 y_proba = model.predict(X_test_scaled)
 
+# Convert predicted probabilities → predicted class
 # class predictions = index of highest probability
 y_pred = np.argmax(y_proba, axis=1)
 
@@ -184,16 +185,20 @@ y_pred = np.argmax(y_proba, axis=1)
 y_test_labels = np.argmax(y_test, axis=1)
 
 acc = accuracy_score(y_test_labels, y_pred)
-prec = precision_score(y_test_labels, y_pred, average='macro')
-recall = recall_score(y_test_labels, y_pred, average='macro')
+prec = precision_score(y_test_labels, y_pred, average='weighted')
+recall = recall_score(y_test_labels, y_pred, average='weighted')
 
 # multiclass ROC AUC (one-vs-rest)
-auc = roc_auc_score(y_test, y_proba, multi_class='ovr')
+auc = roc_auc_score(y_test, y_proba, multi_class='ovo')
 
 print(f"Test accuracy: {acc:.4f}")
 print(f"Test precision: {prec:.4f}")
 print(f"Test recall (sensitivity): {recall:.4f}")
 print(f"Test ROC AUC: {auc:.4f}")
+
+
+### works up to this point ## 
+
 
 
 
@@ -203,7 +208,9 @@ print(f"Test ROC AUC: {auc:.4f}")
 
 
 # Confusion matrix: [ [TN, FP], [FN, TP] ]
-cm = confusion_matrix(y_test, y_pred)
+# this code only works for binary classifiers where the confusion matrix is 2x2.
+# our multiclass classifier has a 4x4 matrix.
+cm = confusion_matrix(y_test_labels, y_pred_labels)
 tn, fp, fn, tp = cm.ravel()
 specificity = tn / (tn + fp)
 print("Confusion matrix:\n", cm)
