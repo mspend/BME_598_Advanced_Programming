@@ -197,57 +197,67 @@ print(f"Test recall (sensitivity): {recall:.4f}")
 print(f"Test ROC AUC: {auc:.4f}")
 
 
-### works up to this point ## 
-
-
-
-
-
-
-
-
-
-# Confusion matrix: [ [TN, FP], [FN, TP] ]
-# this code only works for binary classifiers where the confusion matrix is 2x2.
+# Compute confusion matrix (multiclass)
 # our multiclass classifier has a 4x4 matrix.
-cm = confusion_matrix(y_test_labels, y_pred_labels)
-tn, fp, fn, tp = cm.ravel()
-specificity = tn / (tn + fp)
+cm = confusion_matrix(y_test_labels, y_pred)
 print("Confusion matrix:\n", cm)
-print(f"Specificity: {specificity:.4f}")
+
+class_names = ["TB", "Active Sarcoid", "Non-active sarcoidosis", "Control"]
+
+# Compute specificity per class (one-vs-rest)
+specificities = {}
+for i, cls in enumerate(class_names):
+    tp = cm[i, i]
+    fn = cm[i, :].sum() - tp
+    fp = cm[:, i].sum() - tp
+    tn = cm.sum() - (tp + fp + fn)
+    specificity = tn / (tn + fp)
+    specificities[cls] = specificity
+
+print("\nSpecificity per class:")
+for cls, spec in specificities.items():
+    print(f"{cls}: {spec:.4f}")
+
 
 ## 9. Plot ROC and training curves
-with PdfPages('training_curves_multiclass.pdf') as pdf:
-    fig, ax = plt.subplots(1,2, figsize=(12,4))
+with PdfPages("training_curves_multiclass.pdf") as pdf:
+    fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+    
+    # Loss
     ax[0].plot(history.history['loss'], label='train_loss')
     ax[0].plot(history.history['val_loss'], label='val_loss')
     ax[0].set_xlabel('Epoch')
     ax[0].set_ylabel('Loss')
+    ax[0].set_title("Loss Curves")
     ax[0].legend()
-        
+
+    # Accuracy
     if 'accuracy' in history.history:
         ax[1].plot(history.history['accuracy'], label='train_acc')
         ax[1].plot(history.history['val_accuracy'], label='val_acc')
         ax[1].set_xlabel('Epoch')
         ax[1].set_ylabel('Accuracy')    
         ax[1].legend()
-    pdf.savefig()
-    plt.close()
-    
-with PdfPages('ROC_curve_multiclass.pdf') as pdf:
-    # ROC
-    fpr, tpr, _ = roc_curve(y_test, y_proba)
-    plt.figure(figsize=(6,6))
-    plt.plot(fpr, tpr, label=f"AUC = {roc_auc_score(y_test, y_proba):.3f}")
-    plt.plot([0,1], [0,1], linestyle='--')
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate (Sensitivity)')
-    plt.title('ROC Curve')
-    plt.legend()
-    pdf.savefig()
+
+    pdf.savefig(fig)
     plt.close()
 
+with PdfPages("ROC_curve_multiclass.pdf") as pdf:
+    fig = plt.figure(figsize=(7, 7))
+    
+    for i, cls in enumerate(class_names):
+        fpr, tpr, _ = roc_curve(y_test[:, i], y_proba[:, i])
+        auc_i = roc_auc_score(y_test[:, i], y_proba[:, i])
+        plt.plot(fpr, tpr, label=f"{cls} (AUC={auc_i:.3f})")
+
+    plt.plot([0,1], [0,1], 'k--')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Multiclass ROC (One-vs-Rest)")
+    plt.legend()
+
+    pdf.savefig(fig)
+    plt.close()
 
 ## 10. Save model in keras format
-model.save('breast_cancer_nn_savedmodel.keras')
-
+model.save('tuberculosis_nn_savedmodel.keras')
