@@ -143,12 +143,12 @@ top1000 = gexpTrainFull.var(axis=1).sort_values(ascending=False).index[range(100
 ## 6. Preprocess: standard scaling (important for NN on tabular features)
 # Why do you use fit_transform on the train data and transform on the test data?
 scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(gexpTrain.loc[top1000].T)
+X_train_scaled = scaler.fit_transform(gexpTrainFull.loc[top1000].T)
 X_test_scaled  = scaler.transform(gexpTest.loc[top1000].T)
 
 # Define the y values
 convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Control': 2}
-y_train = to_categorical([convertMe[i] for i in phenosTrain['disease_state']],3)
+y_train = to_categorical([convertMe[i] for i in phenosTrainFull['disease_state']],3)
 y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],3)
 
 ## 7.Build a small dense network for tabular classification
