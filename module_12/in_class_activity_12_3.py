@@ -110,6 +110,7 @@ phenosValidation.loc[phenosValidation.disease_state=='Active sarcoidosis','disea
 print(phenosValidation['disease_state'].value_counts())
 
 
+
 ## 4. Extract gene expression data
 # What columns are available per sample
 # print(gseTrain.gsms['GSM1050928'].columns)
@@ -120,6 +121,21 @@ print(phenosValidation['disease_state'].value_counts())
 gexpTrain = gseTrain.pivot_samples('VALUE').loc[:,subset_train]
 gexpTest = gseTest.pivot_samples('VALUE').loc[:,subset_test]
 gexpValidation = gseValidation.pivot_samples('VALUE')
+
+
+# To reduce overfitting in the model, I want to increase the amount of training data. 
+# I will add the phenosValidation to the training data
+subset_valid = phenosValidation.index[
+    phenosValidation['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])
+]
+phenosValidation = phenosValidation.loc[subset_valid]
+
+gexpValidation = gexpValidation.loc[:, subset_valid]
+
+phenosTrainFull = pd.concat([phenosTrain, phenosValidation], axis=0)
+gexpTrainFull = pd.concat([gexpTrain, gexpValidation], axis=1)
+
+
 
 ## 5. Feature Selection
 top1000 = gexpTrain.var(axis=1).sort_values(ascending=False).index[range(1000)]
@@ -220,7 +236,7 @@ for cls, spec in specificities.items():
 
 
 ## 9. Plot ROC and training curves
-with PdfPages("training_curves_multiclass.pdf") as pdf:
+with PdfPages("training_curves_multiclass_2.pdf") as pdf:
     fig, ax = plt.subplots(1, 2, figsize=(12, 4))
     
     # Loss
@@ -242,7 +258,7 @@ with PdfPages("training_curves_multiclass.pdf") as pdf:
     pdf.savefig(fig)
     plt.close()
 
-with PdfPages("ROC_curve_multiclass.pdf") as pdf:
+with PdfPages("ROC_curve_multiclass_2.pdf") as pdf:
     fig = plt.figure(figsize=(7, 7))
     
     for i, cls in enumerate(class_names):
@@ -260,4 +276,4 @@ with PdfPages("ROC_curve_multiclass.pdf") as pdf:
     plt.close()
 
 ## 10. Save model in keras format
-model.save('tuberculosis_nn_savedmodel.keras')
+model.save('tuberculosis_nn_savedmodel_2.keras')
