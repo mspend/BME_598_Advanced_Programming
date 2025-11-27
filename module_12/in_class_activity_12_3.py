@@ -160,9 +160,9 @@ y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],3)
 # 5. Dropout 0.3
 # 6. Dense layer 10 nodes, activation relu
 model = models.Sequential([layers.Input(shape=(X_train_scaled.shape[1],)),
-                           layers.Dense(20, activation='relu'),
+                           layers.Dense(12, activation='relu'),
                            layers.Dropout(0.3),
-                           layers.Dense(10, activation='relu'),
+                           layers.Dense(6, activation='relu'),
                            layers.Dropout(0.2),
                            # For multiclass classification use softmax with number of classes
                            # (we have 3 disease states so the output dimension must be 3)
@@ -236,7 +236,7 @@ for cls, spec in specificities.items():
 
 
 ## 9. Plot ROC and training curves
-with PdfPages("training_curves_multiclass_3.pdf") as pdf:
+with PdfPages("training_curves_multiclass_4.pdf") as pdf:
     fig, ax = plt.subplots(1, 2, figsize=(12, 4))
     
     # Loss
@@ -258,7 +258,7 @@ with PdfPages("training_curves_multiclass_3.pdf") as pdf:
     pdf.savefig(fig)
     plt.close()
 
-with PdfPages("ROC_curve_multiclass_3.pdf") as pdf:
+with PdfPages("ROC_curve_multiclass_4.pdf") as pdf:
     fig = plt.figure(figsize=(7, 7))
     
     for i, cls in enumerate(class_names):
@@ -276,4 +276,4 @@ with PdfPages("ROC_curve_multiclass_3.pdf") as pdf:
     plt.close()
 
 ## 10. Save model in keras format
-model.save('tuberculosis_nn_savedmodel_3.keras')
+model.save('tuberculosis_nn_savedmodel_4.keras')
