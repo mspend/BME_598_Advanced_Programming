@@ -79,7 +79,7 @@ print(phenosTrain['disease_state'].value_counts())
 
 # Get rid of lung cancer and Baseline 
 # (How is baseline different from control? We don't know)
-subset_train = phenosTrain.index[phenosTrain['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
+subset_train = phenosTrain.index[phenosTrain['disease_state'].isin(['Control','Active Sarcoid','TB'])]
 phenosTrain = phenosTrain.loc[subset_train]
 
 # Number of each disease_state in GSE42830
@@ -93,7 +93,7 @@ phenosTest.columns = ['gender','ethnicity','disease_state']
 print(phenosTest['disease_state'].value_counts())
 
 # Get rid of cancer and pneumonia
-subset_test = phenosTest.index[phenosTest['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])]
+subset_test = phenosTest.index[phenosTest['disease_state'].isin(['Control','Active Sarcoid','TB'])]
 phenosTest = phenosTest.loc[subset_test]
 print(phenosTest['disease_state'].value_counts())
 
@@ -126,7 +126,7 @@ gexpValidation = gseValidation.pivot_samples('VALUE')
 # To reduce overfitting in the model, I want to increase the amount of training data. 
 # I will add the phenosValidation to the training data
 subset_valid = phenosValidation.index[
-    phenosValidation['disease_state'].isin(['Control','Active Sarcoid','TB','Non-active sarcoidosis'])
+    phenosValidation['disease_state'].isin(['Control','Active Sarcoid','TB'])
 ]
 phenosValidation = phenosValidation.loc[subset_valid]
 
@@ -138,7 +138,7 @@ gexpTrainFull = pd.concat([gexpTrain, gexpValidation], axis=1)
 
 
 ## 5. Feature Selection
-top1000 = gexpTrain.var(axis=1).sort_values(ascending=False).index[range(1000)]
+top1000 = gexpTrainFull.var(axis=1).sort_values(ascending=False).index[range(1000)]
 
 ## 6. Preprocess: standard scaling (important for NN on tabular features)
 # Why do you use fit_transform on the train data and transform on the test data?
@@ -147,9 +147,9 @@ X_train_scaled = scaler.fit_transform(gexpTrain.loc[top1000].T)
 X_test_scaled  = scaler.transform(gexpTest.loc[top1000].T)
 
 # Define the y values
-convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Non-active sarcoidosis': 2, 'Control': 3}
-y_train = to_categorical([convertMe[i] for i in phenosTrain['disease_state']],4)
-y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],4)
+convertMe = {'TB': 0, 'Active Sarcoid': 1, 'Control': 2}
+y_train = to_categorical([convertMe[i] for i in phenosTrain['disease_state']],3)
+y_test = to_categorical([convertMe[i] for i in phenosTest['disease_state']],3)
 
 ## 7.Build a small dense network for tabular classification
 # Using Sequential model
@@ -165,8 +165,8 @@ model = models.Sequential([layers.Input(shape=(X_train_scaled.shape[1],)),
                            layers.Dense(10, activation='relu'),
                            layers.Dropout(0.2),
                            # For multiclass classification use softmax with number of classes
-                           # (we have 4 disease states so the output dimension must be 4)
-                           layers.Dense(4, activation='softmax')
+                           # (we have 3 disease states so the output dimension must be 3)
+                           layers.Dense(3, activation='softmax')
                            ])
 
 model.summary()
@@ -218,7 +218,7 @@ print(f"Test ROC AUC: {auc:.4f}")
 cm = confusion_matrix(y_test_labels, y_pred)
 print("Confusion matrix:\n", cm)
 
-class_names = ["TB", "Active Sarcoid", "Non-active sarcoidosis", "Control"]
+class_names = ["TB", "Active Sarcoid", "Control"]
 
 # Compute specificity per class (one-vs-rest)
 specificities = {}
@@ -236,7 +236,7 @@ for cls, spec in specificities.items():
 
 
 ## 9. Plot ROC and training curves
-with PdfPages("training_curves_multiclass_2.pdf") as pdf:
+with PdfPages("training_curves_multiclass_3.pdf") as pdf:
     fig, ax = plt.subplots(1, 2, figsize=(12, 4))
     
     # Loss
@@ -258,7 +258,7 @@ with PdfPages("training_curves_multiclass_2.pdf") as pdf:
     pdf.savefig(fig)
     plt.close()
 
-with PdfPages("ROC_curve_multiclass_2.pdf") as pdf:
+with PdfPages("ROC_curve_multiclass_3.pdf") as pdf:
     fig = plt.figure(figsize=(7, 7))
     
     for i, cls in enumerate(class_names):
@@ -276,4 +276,4 @@ with PdfPages("ROC_curve_multiclass_2.pdf") as pdf:
     plt.close()
 
 ## 10. Save model in keras format
-model.save('tuberculosis_nn_savedmodel_2.keras')
+model.save('tuberculosis_nn_savedmodel_3.keras')
