@@ -29,7 +29,7 @@ start = { "sun": 0.5, "rain": 0.5 }
 
 
 ## 3. Define transition probabilities
-# These transitions mean that if you're already in one weather state, it's more likely to change that weather 
+# These transitions mean that if you're already in one weather state, it's more likely to stay in that that weather 
 transitions = {"sun": { "sun": 0.8, "rain": 0.2},
                "rain": {"sun": 0.3, "rain": 0.7}}
 
