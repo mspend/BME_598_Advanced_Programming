@@ -68,4 +68,4 @@ print('rain = '+str(np.sum([i=='rain' for i in result])))
 
 
 # ## 6. Sample 50 states from chain
-# print(model.sample(50))
+# print(result.sample(50))
