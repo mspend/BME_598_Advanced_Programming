@@ -24,14 +24,15 @@ import numpy as np
 
 ## 2. Define starting probabilities
 # In our weather example, the 2 possible states are sunny and rainy.
-# We are starting with the assumption that these two states are equally likely.
-start = { "sun": 0.5, "rain": 0.5 }
+# For PHX, AZ, it is very likely to start out sunny. 
+# PHX has ~34 days of rain per year
+start = { "sun": 0.95, "rain": 0.05 }
 
 
 ## 3. Define transition probabilities
 # These transitions mean that if you're already in one weather state, it's more likely to stay in that that weather 
-transitions = {"sun": { "sun": 0.8, "rain": 0.2},
-               "rain": {"sun": 0.3, "rain": 0.7}}
+transitions = {"sun": { "sun": 0.95, "rain": 0.05},
+               "rain": {"sun": 0.55, "rain": 0.45}}
 
 
 ## 4. MarkovChain function to predict states
@@ -64,6 +65,5 @@ print('sun = '+str(np.sum([i=='sun' for i in result])))
 print('rain = '+str(np.sum([i=='rain' for i in result])))
 
 
-## 6. Sample 50 states from chain
-print(model.sample(50))
-
+# ## 6. Sample 50 states from chain
+# print(model.sample(50))
