@@ -29,8 +29,9 @@ start = { "sun": 0.5, "rain": 0.5 }
 
 
 ## 3. Define transition probabilities
-transitions = {"sun": { "sun": 0.95, "rain": 0.05},
-               "rain": {"sun": 0.8, "rain": 0.2}}
+# These transitions mean that if you're already in one weather state, it's more likely to change that weather 
+transitions = {"sun": { "sun": 0.8, "rain": 0.2},
+               "rain": {"sun": 0.3, "rain": 0.7}}
 
 
 ## 4. MarkovChain function to predict states
