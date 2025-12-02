@@ -23,6 +23,8 @@ import numpy as np
 
 
 ## 2. Define starting probabilities
+# In our weather example, the 2 possible states are sunny and rainy.
+# We are starting with the assumption that these two states are equally likely.
 start = { "sun": 0.5, "rain": 0.5 }
 
 
@@ -41,6 +43,7 @@ def MarkovChain(start, transitions, num_states):
         raise ValueError("Start likelihoods must sum to approximately 1.0")
     
     # First, choose a starting state using 
+    # uses the initial probabilities to randomly choose a starting state
     states.append(np.random.choice(list(start.keys()), size=1, p=list(start.values()))[0])
     
     # Next add other states
@@ -52,6 +55,8 @@ def MarkovChain(start, transitions, num_states):
 
 
 ## 5. Compute 50 samples
+# We predict states for an entire year, 365 days
+# # of states needs to be an integer. Can'tdo 365.25 states.
 result = MarkovChain(start, transitions, 365)
 print(result)
 print('sun = '+str(np.sum([i=='sun' for i in result])))
