@@ -30,7 +30,9 @@ start = { "sun": 0.95, "rain": 0.05 }
 
 
 ## 3. Define transition probabilities
-# These transitions mean that if you're already in one weather state, it's more likely to stay in that that weather 
+# These transitions mean that if it's sunny, it's very likely to stay sunny.
+# If it's rainy, its slightly more likely to switch back to sunny. 
+# Often in Phoenix, we only have 1 day of rain at a time. We don't often have multiple days of rain on end.
 transitions = {"sun": { "sun": 0.95, "rain": 0.05},
                "rain": {"sun": 0.55, "rain": 0.45}}
 
