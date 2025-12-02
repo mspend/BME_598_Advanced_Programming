@@ -69,3 +69,11 @@ print('rain = '+str(np.sum([i=='rain' for i in result])))
 
 # ## 6. Sample 50 states from chain
 # print(result.sample(50))
+
+# Result:
+# I ran this model half a dozen times and got the following numbers of days of rain:
+# 28, 35, 26, 22, 22, 25, 47, 43, 44, 35, 40, 30
+
+num_rainy_days = np.array([28, 35, 26, 22, 22, 25, 47, 43, 44, 35, 40, 30])
+mean_value = np.mean(num_rainy_days)
+print(f"The average number of days of rain: {mean_value}")
