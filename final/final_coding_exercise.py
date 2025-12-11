@@ -131,6 +131,7 @@ trans_prob = np.array([
 model1 = hmm.CategoricalHMM(n_components=10,n_features=4,random_state=42)
 model1.startprob_ = start_prob
 model1.transmat_= trans_prob
+model1.emissionprob_ = emission_prob
 
 
 
