@@ -46,8 +46,8 @@ def MarkovChain(start, transitions, num_states):
     if not np.isclose(sum(start.values()), 1.0):
         raise ValueError("Start likelihoods must sum to approximately 1.0")
     
-    # First, choose a starting state using 
-    # uses the initial probabilities to randomly choose a starting state
+    # First, choose a starting state 
+    # use the initial probabilities to randomly choose a starting state
     states.append(np.random.choice(list(start.keys()), size=1, p=list(start.values()))[0])
     
     # Next add other states
