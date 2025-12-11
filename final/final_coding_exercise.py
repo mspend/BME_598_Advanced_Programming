@@ -77,6 +77,17 @@ pssm = pssms[str(pssm_number)]
 #      - NM2: All are equally likely, 0.25
 #    - (2pts) 'emission_prob' shape is correct
 #    - (3pts) 'emission_prob' values are correct
+# emission_prob = np.array[ 
+#     [0.01,], # NM1
+
+
+
+
+# ]
+
+
+
+
 
 
 
@@ -95,6 +106,20 @@ pssm = pssms[str(pssm_number)]
 #    - (2pts) trans_prob shape
 #    - (3pts) trans_prob values are correct
 
+start_prob = np.array[1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 0]
+
+trans_prob = np.array([
+    [0.01, 0.99/8, 0.99/8, 0.99/8, 0.99/8, 0.99/8, 0.99/8, 0.99/8, 0.99/8, 0], #NM1
+    [0, 0.99, 0, 0, 0, 0, 0, 0, 0, 0.01], #PSSM0
+    [0, 0, 0.99, 0, 0, 0, 0, 0, 0, 0.01], #PSSM1
+    [0, 0, 0, 0.99, 0, 0, 0, 0, 0, 0.01], #PSSM2
+    [0, 0, 0, 0, 0.99, 0, 0, 0, 0, 0.01], #PSSM3
+    [0, 0, 0, 0, 0, 0.99, 0, 0, 0, 0.01], #PSSM4
+    [0, 0, 0, 0, 0, 0, 0.99, 0, 0, 0.01], #PSSM5
+    [0, 0, 0, 0, 0, 0, 0, 0.99, 0, 0.01], #PSSM6
+    [0, 0, 0, 0, 0, 0, 0, 0, 0.99, 0.01], #PSSM7
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], #NM2
+])
 
 
 ## 5. (15pts) Build an miRvestigator HMM instance and set parameters
