@@ -134,45 +134,6 @@ model1.transmat_= trans_prob
 model1.emissionprob_ = emission_prob
 
 
-
-
-
-
-
-
-
-
-
-
-# I copied this from 13.1 but it accepts the starting and transition states as dictionaries. I'd have to modify them or modify the function
-## 4. MarkovChain function to predict states
-# def MarkovChain(start, transitions, num_states):
-#     # State chain
-#     states = []
-        
-#     # Ensure the probabilities sum to 1 (a good practice check)
-#     if not np.isclose(sum(start.values()), 1.0):
-#         raise ValueError("Start likelihoods must sum to approximately 1.0")
-    
-#     # First, choose a starting state using 
-#     # uses the initial probabilities to randomly choose a starting state
-#     states.append(np.random.choice(list(start.keys()), size=1, p=list(start.values()))[0])
-    
-#     # Next add other states
-#     for i in range(num_states-1):
-#         states.append(np.random.choice(list(transitions[states[-1]].keys()), size=1, p=list(transitions[states[-1]].values()))[0])
-    
-#     # Return states
-#     return(states)
-
-# #from lecture slides
-# ## 3. Create Markov chain
-# model = MarkovChain(start_prob, trans_prob, 42)
-
-# ## 4. Sample 50 states from chain
-# print(model.sample(50))
-
-
 ## 6. (10pts) Load all the miRNA seed sequences and compare against PSSM miRvestigator model to find best fit
 #   A. Load all miRNA seed sequences from the 'miRBase_miRNAs.csv' file into a Pandas DataFrame called 'miRNAs'
 #     - (5pts) Check if shape of miRNAs Pandas DataFrame is correct
