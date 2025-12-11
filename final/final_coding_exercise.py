@@ -49,7 +49,11 @@ def convert_to_states(hidden):
 #     A. Install any packages you haven't already
 #     B.Restart console: Consoles tab -> Restart Kernel
 #     C. Import all the packages
-
+import pandas as pd
+import numpy as np
+import hmmlearn as hmm
+import random
+import json
 
 
 ## 3a. (15pts) Get the PSSM for your analyses
