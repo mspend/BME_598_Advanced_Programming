@@ -24,17 +24,14 @@ def convert_DNA_to_emitted_indices(rev_comp_seed_seq):
     emitted_indices = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
     return np.array([emitted_indices[i] for i in rev_comp_seed_seq])
 
-
 ## Convert  to DNA nucleotides
 def convert_to_states(hidden):
     states = ['NM1', 'PSSM0', 'PSSM1', 'PSSM2', 'PSSM3', 'PSSM4', 'PSSM5', 'PSSM6', 'PSSM7', 'NM2']
     return ([states[i] for i in hidden], ''.join(['|' if not states[i] in ['NM1','NM2'] else '_' for i in hidden]))
 
-
 ###############################
 ### Develop your code below ###
 ###############################
-
 
 ## 1. (10pts) Prepare an executive summary that clearly states the goals of the proposed analysis
 #             and provides a concise overview of the analytical steps to be undertaken 
@@ -42,7 +39,6 @@ def convert_to_states(hidden):
 #     - And it should be no more than one paragraph.
 #     - The overview of analytical steps should be written as an outline with bullet points.
 #     - Provide more detail than the headings of the Deliverables section.
-
 
 
 ## 2. (10pts) Load up the packages you will need to run
@@ -54,7 +50,6 @@ import numpy as np
 from hmmlearn import hmm
 import random
 import json
-
 
 ## 3a. (15pts) Get the PSSM for your analyses
 #    A. Set 'sid' variable and get the correct PSSM:
@@ -115,7 +110,6 @@ trans_prob = np.array([
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], #NM2
 ])
 
-
 ## 5. (15pts) Build an miRvestigator HMM instance and set parameters
 #    A. Determine the HMM type and instantiate it as 'model1' with the correct number of components and features
 #      - Also, set the 'random_state' parameter to 42 
@@ -157,7 +151,7 @@ model1.emissionprob_ = emission_prob
 #           - 'posterior_prob' - the log likelihood of the fit for a given miRNA seed sequence versus the miRvestigator model for a PSSM
 #       - (5pts) Check length of results object
 
-
+miRNAs = pd.read_csv('miRBase_miRNAs.csv', index_col=0)
 
 ## 7. (20pts) Write out csv file sorted by descending posterior_prob
 #   A. Turn 'results' into a Pandas DataFrame called 'results_df'
