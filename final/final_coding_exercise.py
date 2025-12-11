@@ -78,20 +78,31 @@ pssm = pssms[str(pssm_number)]
 #    - (2pts) 'emission_prob' shape is correct
 #    - (3pts) 'emission_prob' values are correct
 
+nm1_ep = np.array([0.25, 0.25, 0.25, 0.25])
+pssm_ep = np.array(pssm).transpose()
 
 # values from pssms[str[969]]
-emission_prob = np.array([
-    [0.25, 0.25, 0.25, 0.25],
-    [0.10667944, 0.66006833, 0.13455484, 0.09869739],
-    [0.1608945 , 0.7473111 , 0.00979773, 0.08199666],
-    [0.01350603, 0.09173628, 0.8475282 , 0.04722949],
-    [0.09914967, 0.66028365, 0.13047052, 0.11009616],
-    [0.05459905, 0.8040019 , 0.10038415, 0.04101489],
-    [0.01034981, 0.77183734, 0.14130188, 0.07651097],
-    [0.0927581 , 0.76955479, 0.01959754, 0.11808957],
-    [0.15271665, 0.00892138, 0.75811998, 0.08024198],
-    [0.25, 0.25, 0.25, 0.25]]
-    )
+emission_prob = np.vstack((nm1_ep, pssm_ep, nm1_ep))
+print(emission_prob)
+
+
+
+
+
+# values from pssms[str[969]]
+
+# np.array([
+#     [0.25, 0.25, 0.25, 0.25],
+#     [0.10667944, 0.66006833, 0.13455484, 0.09869739],
+#     [0.1608945 , 0.7473111 , 0.00979773, 0.08199666],
+#     [0.01350603, 0.09173628, 0.8475282 , 0.04722949],
+#     [0.09914967, 0.66028365, 0.13047052, 0.11009616],
+#     [0.05459905, 0.8040019 , 0.10038415, 0.04101489],
+#     [0.01034981, 0.77183734, 0.14130188, 0.07651097],
+#     [0.0927581 , 0.76955479, 0.01959754, 0.11808957],
+#     [0.15271665, 0.00892138, 0.75811998, 0.08024198],
+#     [0.25, 0.25, 0.25, 0.25]]
+#     )
 
 
 ## Values I wrote down from class
@@ -163,6 +174,33 @@ trans_prob = np.array([
 #    D. Set the emission probabilites
 #    - (2pts) Check if emissionprob_ attribute set
 
+# I copied this from 13.1 but it accepts the starting and transition states as dictionaries. I'd have to modify them or modify the function
+## 4. MarkovChain function to predict states
+# def MarkovChain(start, transitions, num_states):
+#     # State chain
+#     states = []
+        
+#     # Ensure the probabilities sum to 1 (a good practice check)
+#     if not np.isclose(sum(start.values()), 1.0):
+#         raise ValueError("Start likelihoods must sum to approximately 1.0")
+    
+#     # First, choose a starting state using 
+#     # uses the initial probabilities to randomly choose a starting state
+#     states.append(np.random.choice(list(start.keys()), size=1, p=list(start.values()))[0])
+    
+#     # Next add other states
+#     for i in range(num_states-1):
+#         states.append(np.random.choice(list(transitions[states[-1]].keys()), size=1, p=list(transitions[states[-1]].values()))[0])
+    
+#     # Return states
+#     return(states)
+
+# #from lecture slides
+# ## 3. Create Markov chain
+# model = MarkovChain(start_prob, trans_prob, 42)
+
+# ## 4. Sample 50 states from chain
+# print(model.sample(50))
 
 
 ## 6. (10pts) Load all the miRNA seed sequences and compare against PSSM miRvestigator model to find best fit
