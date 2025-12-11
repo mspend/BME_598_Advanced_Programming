@@ -51,7 +51,7 @@ def convert_to_states(hidden):
 #     C. Import all the packages
 import pandas as pd
 import numpy as np
-import hmmlearn as hmm
+from hmmlearn import hmm
 import random
 import json
 
@@ -127,6 +127,21 @@ trans_prob = np.array([
 #    - (2pts) Check if transmat_ attribute set
 #    D. Set the emission probabilites
 #    - (2pts) Check if emissionprob_ attribute set
+
+model1 = hmm.CategoricalHMM(n_components=10,n_features=4,random_state=42)
+model1.startprob_ = start_prob
+model1.transmat_= trans_prob
+
+
+
+
+
+
+
+
+
+
+
 
 # I copied this from 13.1 but it accepts the starting and transition states as dictionaries. I'd have to modify them or modify the function
 ## 4. MarkovChain function to predict states
