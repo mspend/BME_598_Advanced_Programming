@@ -175,7 +175,7 @@ for mirna_id, row in miRNAs.iterrows():
     seq = row['seed seq']
 
     # find the reverse complement of the seed sequence
-    rev_comp = reverseComplement(seq)
+    rev_comp = row['seed rev comp seq']
 
     # convert that to indices for each state
     rev_comp_as_indices = convert_DNA_to_emitted_indices(rev_comp)
