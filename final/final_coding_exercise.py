@@ -182,7 +182,8 @@ for mirna_id, row in miRNAs.iterrows():
     rev_comp_as_indices = rev_comp_as_indices.reshape(-1, 1)
 
     # The decode function computes the posterior probability and hidden states from running the Viterbi algorithm
-    posterior_prob, hidden = model1.decode(rev_comp_as_indices)
+    posterior_prob, hidden = model1.decode(rev_comp_as_indices, algorithm='viterbi')
+    # posterior_prob = model1.score(rev_comp_as_indices)
     states, pattern = convert_to_states(hidden)
 
     matching = 0
