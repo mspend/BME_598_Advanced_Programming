@@ -24,7 +24,7 @@ def convert_DNA_to_emitted_indices(rev_comp_seed_seq):
     emitted_indices = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
     return np.array([emitted_indices[i] for i in rev_comp_seed_seq])
 
-## Convert  to DNA nucleotides
+## Convert to DNA nucleotides
 def convert_to_states(hidden):
     states = ['NM1', 'PSSM0', 'PSSM1', 'PSSM2', 'PSSM3', 'PSSM4', 'PSSM5', 'PSSM6', 'PSSM7', 'NM2']
     return ([states[i] for i in hidden], ''.join(['|' if not states[i] in ['NM1','NM2'] else '_' for i in hidden]))
@@ -166,9 +166,49 @@ model1.emissionprob_ = emission_prob
 
 miRNAs = pd.read_csv('miRBase_miRNAs.csv', index_col=0)
 
-#compare seed sequence to PSSM
-for sequence in miRNAs:
+# tester outside the loop
+seq = miRNAs['seed seq']['hsa-miR-507']
+rev_comp = reverseComplement(seq)
+rev_comp_as_indices = convert_DNA_to_emitted_indices(rev_comp)
+rev_comp_as_indices = rev_comp_as_indices.reshape(-1, 1)
+posterior_prob, hidden = model1.decode(rev_comp_as_indices)
+states, pattern = convert_to_states(hidden)
+temp_dict = {'miRNA': seq,
+             'seed seq': ,
+             'seed rev comp seq': rev_comp,
+         }
+
+
+
+
+# create the list of results
+results = []
+
+counter = 0
+
+# compare seed sequence to PSSM
+# iterate through the liines in miRNAs
+for seq in miRNAs['seed seq']:
+
+    # if counter >6:
+    #     exit
+    # else:
+    #     print(seq)
+    # counter +=1
+
+    # find the reverse complement of the seed sequence
+    rev_comp = reverseComplement(seq)
+
+    # convert that to indices for each state
+    rev_comp_as_indices = convert_DNA_to_emitted_indices(rev_comp)
+    rev_comp_as_indices = rev_comp_as_indices.reshape(-1, 1)
+
+    # The decode function computes the posterior probability and hidden states from running the Viterbi algorithm
+    posterior_prob, hidden = model1.decode(rev_comp_as_indices)
+    states, pattern = convert_to_states(hidden)
+
     
+
 
 
 ## 7. (20pts) Write out csv file sorted by descending posterior_prob
