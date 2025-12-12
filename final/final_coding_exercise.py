@@ -91,7 +91,6 @@ pssm_ep = np.array(pssm).transpose()
 
 # assemble the matrix vertically using vstack
 emission_prob = np.vstack((nm_ep, pssm_ep, nm_ep))
-print(emission_prob)
 
 ## 4. (10pts) Prepare parameters for a miRvestigator HMM
 #    A. Define starting probabilities as the variable 'start_prob'
@@ -210,6 +209,11 @@ for seq in miRNAs['seed seq']:
 #     - (5pts) Check for 'results.csv file'
 
 
+# Set the index as the miRNA ID
+# is it okay if the miRNA ID shows up twice, in the index col and the miRNA col?
+results_df = pd.DataFrame(results, index=(results[i]['miRNA'] for i in range(0,len(results))))
+
+results_df.to_csv('results.csv')
 
 ## 8. (10pts) Biological interpretation that is to be completed in a separate Word document that will be converted into a PDF for submission
 #   A. Using a minimum of 3 and a maximum of 5 paragraphs of plain text (not bullet points), describe how the data in the figures and output from statistical tests in the results tables answer the following questions:
