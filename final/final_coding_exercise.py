@@ -19,7 +19,7 @@
 
 ### Free functions that will be helpful!!!
 
-## Convert  to DNA nucleotides
+## Convert to DNA nucleotides
 def convert_DNA_to_emitted_indices(rev_comp_seed_seq):
     emitted_indices = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
     return np.array([emitted_indices[i] for i in rev_comp_seed_seq])
@@ -28,6 +28,18 @@ def convert_DNA_to_emitted_indices(rev_comp_seed_seq):
 def convert_to_states(hidden):
     states = ['NM1', 'PSSM0', 'PSSM1', 'PSSM2', 'PSSM3', 'PSSM4', 'PSSM5', 'PSSM6', 'PSSM7', 'NM2']
     return ([states[i] for i in hidden], ''.join(['|' if not states[i] in ['NM1','NM2'] else '_' for i in hidden]))
+
+# Function for finding the complementary sequence
+def complement(seq):
+    complement = {'A':'T', 'T':'A', 'C':'G', 'G':'C', 'N':'N', 'U':'A'}
+    complseq = [complement[base] for base in seq]
+    return complseq
+
+# Function for finding the reverse complement
+def reverseComplement(seq):
+    seq = list(seq)
+    seq.reverse()
+    return ''.join(complement(seq))
 
 ###############################
 ### Develop your code below ###
@@ -74,9 +86,10 @@ pssm = pssms[str(pssm_number)]
 #    - (3pts) 'emission_prob' values are correct
 
 nm_ep = np.array([0.25, 0.25, 0.25, 0.25])
+# get the probabiliies for each nucleotide in that PSSM from the pssms.json file
 pssm_ep = np.array(pssm).transpose()
 
-# values from pssms[str[969]]
+# assemble the matrix vertically using vstack
 emission_prob = np.vstack((nm_ep, pssm_ep, nm_ep))
 print(emission_prob)
 
@@ -152,6 +165,11 @@ model1.emissionprob_ = emission_prob
 #       - (5pts) Check length of results object
 
 miRNAs = pd.read_csv('miRBase_miRNAs.csv', index_col=0)
+
+#compare seed sequence to PSSM
+for sequence in miRNAs:
+    
+
 
 ## 7. (20pts) Write out csv file sorted by descending posterior_prob
 #   A. Turn 'results' into a Pandas DataFrame called 'results_df'
