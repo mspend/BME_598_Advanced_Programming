@@ -166,43 +166,12 @@ model1.emissionprob_ = emission_prob
 
 miRNAs = pd.read_csv('miRBase_miRNAs.csv', index_col=0)
 
-# tester outside the loop
-seq = miRNAs['seed seq']['hsa-miR-507']
-rev_comp = reverseComplement(seq)
-rev_comp_as_indices = convert_DNA_to_emitted_indices(rev_comp)
-rev_comp_as_indices = rev_comp_as_indices.reshape(-1, 1)
-posterior_prob, hidden = model1.decode(rev_comp_as_indices)
-states, pattern = convert_to_states(hidden)
-matching = 0
-for symbol in pattern:
-    if symbol == '|':
-        matching +=1
-result_dict = {'miRNA': 'hsa-miR-507',
-             'seed seq': seq,
-             'seed rev comp seq': rev_comp,
-             'states': states,
-             'pattern': pattern,
-             'matching': matching,
-             'posterior_prob': posterior_prob,
-         }
-results.append(result_dict)
-
-
-
 # create the list of results
 results = []
-
-counter = 0
 
 # compare seed sequence to PSSM
 # iterate through the lines in miRNAs
 for seq in miRNAs['seed seq']:
-
-    # if counter >6:
-    #     exit
-    # else:
-    #     print(seq)
-    # counter +=1
 
     # find the reverse complement of the seed sequence
     rev_comp = reverseComplement(seq)
@@ -215,13 +184,20 @@ for seq in miRNAs['seed seq']:
     posterior_prob, hidden = model1.decode(rev_comp_as_indices)
     states, pattern = convert_to_states(hidden)
 
+    matching = 0
+    for symbol in pattern:
+        if symbol == '|':
+            matching +=1
 
-
-
-
+    result_dict = {'miRNA': 'hsa-miR-507',
+                'seed seq': seq,
+                'seed rev comp seq': rev_comp,
+                'states': states,
+                'pattern': pattern,
+                'matching': matching,
+                'posterior_prob': posterior_prob,
+            }
     results.append(result_dict)
-    
-
 
 
 ## 7. (20pts) Write out csv file sorted by descending posterior_prob
