@@ -173,11 +173,19 @@ rev_comp_as_indices = convert_DNA_to_emitted_indices(rev_comp)
 rev_comp_as_indices = rev_comp_as_indices.reshape(-1, 1)
 posterior_prob, hidden = model1.decode(rev_comp_as_indices)
 states, pattern = convert_to_states(hidden)
-temp_dict = {'miRNA': seq,
-             'seed seq': ,
+matching = 0
+for symbol in pattern:
+    if symbol == '|':
+        matching +=1
+result_dict = {'miRNA': 'hsa-miR-507',
+             'seed seq': seq,
              'seed rev comp seq': rev_comp,
+             'states': states,
+             'pattern': pattern,
+             'matching': matching,
+             'posterior_prob': posterior_prob,
          }
-
+results.append(result_dict)
 
 
 
@@ -187,7 +195,7 @@ results = []
 counter = 0
 
 # compare seed sequence to PSSM
-# iterate through the liines in miRNAs
+# iterate through the lines in miRNAs
 for seq in miRNAs['seed seq']:
 
     # if counter >6:
@@ -207,6 +215,11 @@ for seq in miRNAs['seed seq']:
     posterior_prob, hidden = model1.decode(rev_comp_as_indices)
     states, pattern = convert_to_states(hidden)
 
+
+
+
+
+    results.append(result_dict)
     
 
 
