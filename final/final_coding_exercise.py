@@ -170,7 +170,9 @@ results = []
 
 # compare seed sequence to PSSM
 # iterate through the lines in miRNAs
-for seq in miRNAs['seed seq']:
+for mirna_id, row in miRNAs.iterrows():
+
+    seq = row['seed seq']
 
     # find the reverse complement of the seed sequence
     rev_comp = reverseComplement(seq)
@@ -188,7 +190,7 @@ for seq in miRNAs['seed seq']:
         if symbol == '|':
             matching +=1
 
-    result_dict = {'miRNA': 'hsa-miR-507',
+    result_dict = {'miRNA': mirna_id,
                 'seed seq': seq,
                 'seed rev comp seq': rev_comp,
                 'states': states,
@@ -209,9 +211,10 @@ for seq in miRNAs['seed seq']:
 #     - (5pts) Check for 'results.csv file'
 
 
+
+results_df = pd.DataFrame(results)
 # Set the index as the miRNA ID
-# is it okay if the miRNA ID shows up twice, in the index col and the miRNA col?
-results_df = pd.DataFrame(results, index=(results[i]['miRNA'] for i in range(0,len(results))))
+results_df = results_df.set_index('miRNA')
 sorted_results = results_df.sort_values('posterior_prob',ascending=False)
 
 sorted_results.to_csv('results.csv')
