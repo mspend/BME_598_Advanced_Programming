@@ -216,9 +216,9 @@ for mirna_id, row in miRNAs.iterrows():
 results_df = pd.DataFrame(results)
 # Set the index as the miRNA ID
 results_df = results_df.set_index('miRNA')
-sorted_results = results_df.sort_values('posterior_prob',ascending=False)
+results_df = results_df.sort_values('posterior_prob',ascending=False)
 
-sorted_results.to_csv('results.csv')
+results_df.to_csv('results.csv')
 
 ## 8. (10pts) Biological interpretation that is to be completed in a separate Word document that will be converted into a PDF for submission
 #   A. Using a minimum of 3 and a maximum of 5 paragraphs of plain text (not bullet points), describe how the data in the figures and output from statistical tests in the results tables answer the following questions:
